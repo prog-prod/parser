@@ -25,6 +25,21 @@ const router = new VueRouter({
             component: () => import('./components/Auth/ResetPasswordComponent.vue'),
             meta: { guest: true, admin: false }
         },
+        {
+            path: '/dashboard',
+            component: () => import('./components/Dashboard/DashboardComponent.vue'),
+            meta: { guest: false, admin: false },
+            name: 'dashboard'
+        },
+        {
+            path: '/dashboard/logout',
+            component: () => {
+                store.dispatch('logout');
+                window.location.href = '/';
+            },
+            meta: { guest: false, admin: false },
+            name: 'dashboard.logout'
+        },
         { path: "*", component: () => import('./components/Dashboard/Errors/404Component.vue') },
     ]
 });

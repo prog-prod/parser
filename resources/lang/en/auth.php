@@ -16,5 +16,8 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'success' =>  'You have been successfully logged in.'
+    'success' => 'You have been successfully logged in.',
+    'not_exists_email' => 'The user with this email does not exist.',
+    'logout' => 'You have successfully logged out.',
+    'auth.register.success' => 'You have been successfully registered.'
 ];

@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\User\ProfilePasswordController;
+use App\Http\Controllers\Api\User\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +20,15 @@ use App\Http\Controllers\Api\Auth\LoginController;
 
 Route::group(['prefix' => 'auth'], function() {
     Route::post('login', LoginController::class);
+    Route::post('register', RegisterController::class);
 });
 
 Route::group(['middleware' => ['auth:api']], function() {
-    // add dashboard endpoints
+    Route::group(['prefix' => 'user'], function() {
+        Route::get('profile', [ProfileController::class, 'show']);
+        Route::put('profile', [ProfileController::class, 'update']);
+        Route::put('profile/password', ProfilePasswordController::class);
+
+        Route::delete('logout', LogoutController::class);
+    });
 });
