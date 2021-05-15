@@ -40,6 +40,12 @@ const router = new VueRouter({
             meta: { guest: false, admin: false },
             name: 'dashboard.logout'
         },
+        {
+            path: '/dashboard/profile',
+            component: () => import('./components/Dashboard/User/ProfileComponent.vue'),
+            meta: { guest: false, admin: false },
+            name: 'dashboard.profile'
+        },
         { path: "*", component: () => import('./components/Dashboard/Errors/404Component.vue') },
     ]
 });

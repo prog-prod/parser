@@ -43,4 +43,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'role' => UserRoleEnum::class
     ];
+
+    public function stockFilter()
+    {
+        return $this->hasOne(StockFilter::class);
+    }
 }

@@ -470,6 +470,9 @@ export default {
     },
     created() {
         this.user = this.$store.getters.user;
+    },
+    mounted() {
+        $('#side-menu').metisMenu();
     }
 }
 </script>
