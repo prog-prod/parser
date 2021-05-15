@@ -68,6 +68,9 @@ export const store = new Vuex.Store({
         },
         async loadTimerOptions({commit}, data) {
             await commit('timer_options', {data: data});
+        },
+        updateStockFilterSettings({commit}, data) {
+            commit('update_user_stock_filter', data);
         }
     },
     mutations: {
@@ -90,6 +93,9 @@ export const store = new Vuex.Store({
         },
         timer_options(state, {data}) {
             state.timerOptions = data;
+        },
+        update_user_stock_filter(state, {data}) {
+            state.user.stock_filter = data;
         }
     },
 });

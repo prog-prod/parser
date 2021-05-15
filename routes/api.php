@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\ProfilePasswordController;
 use App\Http\Controllers\Api\User\LogoutController;
-
+use App\Http\Controllers\Api\User\StockFilterSettingsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth:api']], function() {
         Route::get('profile', [ProfileController::class, 'show']);
         Route::put('profile', [ProfileController::class, 'update']);
         Route::put('profile/password', ProfilePasswordController::class);
+        Route::put('profile/stock-filter/settings', StockFilterSettingsController::class);
 
         Route::delete('logout', LogoutController::class);
     });

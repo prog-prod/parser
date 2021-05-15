@@ -11,12 +11,13 @@
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/template.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.min.css') }}">
 
+    <script>window.Laravel = { csrfToken : '{{ csrf_token() }}' };</script>
+    <script src="{{ mix('assets/js/app.min.js') }}" defer></script>
 </head>
 <body>
 
@@ -26,10 +27,13 @@
     </div>
 </div>
 
-<script>window.Laravel = { csrfToken : '{{ csrf_token() }}' };</script>
-<script src="{{ mix('assets/js/app.min.js') }}"></script>
-<script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-{{--<script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>--}}
-{{--<script src="{{ asset('assets/js/template.min.js') }}"></script>--}}
+<script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/metismenu" defer></script>
+<script src="{{ asset('assets/libs/node-waves/waves.min.js') }}" defer></script>
+{{--<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js" async></script>--}}
+<script src="{{ asset('assets/js/template.min.js') }}" defer></script>
+
+{{--<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>--}}
 </body>
 </html>

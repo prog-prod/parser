@@ -19,6 +19,12 @@ class UserObserver
         $user->role = UserRoleEnum::user()->value;
     }
 
+    public function created(User $user) : void
+    {
+        // adding default stock filter settings to user
+        $user->stockFilter()->create();
+    }
+
     public function updating(User $user) : void
     {
         if ($user->email !== $user->getOriginal('email')) {

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserStockFilterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,10 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (int) $this->id,
-            'email' => (string) $this->email,
-            'name' => (string) $this->name,
-            'role' => (string) $this->role->value,
-            'stock_filter' => new UserStockFilterResource($this->stockFilter)
+            'user_id' => (int) $this->user_id,
+            'min_price' => (float) $this->min_price,
+            'max_price' => (float) $this->max_price,
+            'categories' => (array) $this->categories
         ];
     }
 }

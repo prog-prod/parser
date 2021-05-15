@@ -11,5 +11,8 @@ export default {
     },
     updatePassword(data) {
         return httpClient.put(`${RESOURCE_NAME}/profile/password`, data);
+    },
+    updateStockFilter(data) {
+        return httpClient.put(`${RESOURCE_NAME}/profile/stock-filter/settings`, data);
     }
 };

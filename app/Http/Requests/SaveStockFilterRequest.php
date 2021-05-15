@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\EmailValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class SaveStockFilterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +24,8 @@ class ProfileUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'min:3'],
-            'email' => ['unique:users,email,'. auth()->id() . ',id', 'required', new EmailValidationRule()],
+            'min_price' => ['nullable', 'numeric'],
+            'max_price' => ['nullable', 'numeric'],
         ];
     }
 }
