@@ -18,8 +18,3 @@ const app = new Vue({
     store,
     router
 }).$mount('#app');
-
-const token = localStorage.getItem('Bearer')
-if (token) {
-  axios.defaults.headers.common['Authorization'] = 'Bearer '+token
-}

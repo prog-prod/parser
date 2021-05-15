@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\ProfilePasswordController;
 use App\Http\Controllers\Api\User\LogoutController;
 use App\Http\Controllers\Api\User\StockFilterSettingsController;
+use App\Http\Controllers\Api\User\DashboardController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,10 +33,8 @@ Route::group(['middleware' => ['auth:api']], function() {
         Route::put('profile/password', ProfilePasswordController::class);
         Route::put('profile/stock-filter/settings', StockFilterSettingsController::class);
 
-	    Route::get('dashboard', [DashboardController::class, 'dashboard']);
-
         Route::delete('logout', LogoutController::class);
     });
 
-
+    Route::get('dashboard', [DashboardController::class, 'dashboard']);
 });

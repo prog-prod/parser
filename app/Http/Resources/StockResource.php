@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DashboardResource extends JsonResource
+class StockResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class DashboardResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        => $this->id,
-            'symbol'    => $this->symbol,
-            'price'    => $this->price
+            'id' => $this->id,
+            'symbol' => $this->symbol,
+            'price' => $this->price
         ];
     }
 }

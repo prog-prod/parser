@@ -68,6 +68,7 @@ class Stock extends Model
 		"perfQxCan13Weeks",
 		"perfQxCan52Weeks"
     ];
+
 }
 
 
