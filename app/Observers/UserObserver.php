@@ -22,7 +22,7 @@ class UserObserver
     public function created(User $user) : void
     {
         // adding default stock filter settings to user
-        $user->stockFilter()->create();
+        $user->stockFilter()->create(['min_price' => 0, 'max_price' => 0.05]);
     }
 
     public function updating(User $user) : void

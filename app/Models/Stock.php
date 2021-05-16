@@ -69,6 +69,10 @@ class Stock extends Model
 		"perfQxCan52Weeks"
     ];
 
+    public function scopePriceRange($query, $range)
+    {
+        return $query->whereBetween('price', $range);
+    }
 }
 
 

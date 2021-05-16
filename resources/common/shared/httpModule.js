@@ -53,6 +53,10 @@ httpClient.interceptors.response.use(
             routes.push({ name: 'dashboard.403' });
             return Promise.reject(error.response.data);
         }
+        else if (response.status === 429) {
+            window.Vue.toasted.error('You have made too many requests in the last minute. Please try again later.');
+            return Promise.reject(error.response.data);
+        }
 
         // show errors from back-end side
         $.each(response.data.errors, function (key, value) {

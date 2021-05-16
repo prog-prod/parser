@@ -12,7 +12,9 @@ class DashboardController extends Controller
 {
     public function dashboard(Request $request): JsonResponse
     {
-    	$stocks = Stock::where('price', '<=', 0.05)
+        $stockFilter = auth()->user()->stockFilter;
+
+    	$stocks = Stock::priceRange([$stockFilter->min_price, $stockFilter->max_price])
             ->orderBy($request->column ?? 'created_at', $request->order ?? 'desc')
             ->paginate($request->per_page ?? 20);
 
