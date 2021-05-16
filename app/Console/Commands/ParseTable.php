@@ -46,6 +46,8 @@ class ParseTable extends Command
         ]);
 
         $array = json_decode($response->json(), true);
+    
+        ECHO count($array).PHP_EOL;
         
         foreach ($array['stocks'] as $key => $value) {
             
