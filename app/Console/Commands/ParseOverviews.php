@@ -49,10 +49,12 @@ class ParseOverviews extends Command
             
             $pool_array = [];
 
+            $i = 0;
             foreach ($chunk as $kk => $ch) {
                 $pool_array[] = 'https://backend.otcmarkets.com/otcapi/stock/trade/inside/'.$ch['symbol'].'?symbol='.$ch['symbol'];
-                $pool_keys[$kk] = $ch['id'];
+                $pool_keys[$i++] = $ch['id'];
             }
+            unset($i);
 
             $responses = Http::pool(fn (Pool $pool) => $this->helper($pool, $pool_array));
             
