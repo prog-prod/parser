@@ -97,7 +97,7 @@ export default {
             DashboardService.stocks({page: this.currentPage, column: this.sortedColumn, order: this.order, per_page: this.perPage}).then((response) => {
                 this.socks = response.stocks;
                 this.pagination = response.pagination;
-                this.columns = ['id', 'symbol', 'price'];
+                this.columns = ['id', 'symbol', 'price', 'securityName', 'market', 'securityType', 'country', 'pct1Day', 'shortInterest', 'shortInterestPercent', 'volume', 'isBank'];
             });
         },
         /**

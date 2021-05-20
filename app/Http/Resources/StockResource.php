@@ -17,7 +17,16 @@ class StockResource extends JsonResource
         return [
             'id' => $this->id,
             'symbol' => $this->symbol,
-            'price' => $this->price
+            'price' => $this->price,
+            'securityName' => $this->securityName,
+            'market' => $this->market,
+            'securityType' => $this->securityType,
+            'country' => $this->country,
+            'pct1Day' => $this->pct1Day,
+            'shortInterest' => $this->shortInterest,
+            'shortInterestPercent' => $this->shortInterestPercent,
+            'volume' => $this->volume,
+            'isBank' => $this->isBank
         ];
     }
 }

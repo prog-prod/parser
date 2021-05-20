@@ -37,4 +37,5 @@ Route::group(['middleware' => ['auth:api']], function() {
     });
 
     Route::get('dashboard', [DashboardController::class, 'dashboard']);
+    Route::get('stock/{stock}', [DashboardController::class, 'stock']);
 });

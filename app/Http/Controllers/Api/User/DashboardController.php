@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\StockResource;
+use App\Http\Resources\StockOverviewResource;
 use App\Models\Stock;
+use App\Models\StockOverview;
 use Illuminate\Http\JsonResponse;
 
 class DashboardController extends Controller
@@ -29,6 +31,23 @@ class DashboardController extends Controller
                 'per_page' => (int) $stocks->perPage(),
                 'total' => (int) $stocks->total(),
             ]
+        ], 200);
+    }
+
+    public function stock($symbol): JsonResponse
+    {
+        $stock = StockOverview::where('symbol', $symbol)->first();
+
+        if (is_null($stock)) {
+            
+            return response()->json([
+                'result' => false
+            ], 404);
+        }
+
+        return response()->json([
+            'result' => true,
+            'stock' => new StockOverviewResource($stock)
         ], 200);
     }
 }
