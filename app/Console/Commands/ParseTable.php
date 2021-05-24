@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use App\Models\Stock;
+use App\Models\StocksHistory;
 
 class ParseTable extends Command
 {
@@ -39,6 +40,22 @@ class ParseTable extends Command
      */
     public function handle()
     {
+
+        $s_o = Stock::all();
+
+        if($s_o != null){
+
+            $s_o = $s_o->makeHidden(['id', 'created_at', 'updated_at'])->toArray();
+            
+            foreach ($s_o as $s) {
+
+                StocksHistory::create($s);
+                
+                ECHO "copy-". $s['symbol'] .PHP_EOL;
+            }
+            
+            ECHO "copy- success" .PHP_EOL;
+        }
 
         $response = Http::get('https://www.otcmarkets.com/research/stock-screener/api', [
             'pageSize' => 15000,
