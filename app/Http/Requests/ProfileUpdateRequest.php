@@ -27,6 +27,8 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3'],
             'email' => ['unique:users,email,'. auth()->id() . ',id', 'required', new EmailValidationRule()],
+            'send_telegram' => ['nullable', 'bool'],
+            'send_email' => ['nullable', 'bool'],
         ];
     }
 }

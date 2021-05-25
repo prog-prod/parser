@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Telegram\WebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,8 @@ Route::get('/', function() {
     return redirect()->to('/login');
 });
 
+Route::any('tg/updates', WebhookController::class);
+
 Route::get('{path}', function() {
     return view('dashboard.master');
-})->where('path', '.*');
+})->where('path', '.*')->name('vue-route');

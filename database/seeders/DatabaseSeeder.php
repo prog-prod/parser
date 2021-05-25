@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,5 +22,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('admin5678'),
                 'role' => UserRoleEnum::admin()->value
             ]);
+
+        Artisan::call('passport:install');
     }
 }

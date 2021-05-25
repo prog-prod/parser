@@ -23,6 +23,12 @@ class CreateUsersTable extends Migration
              * getting from @see UserRoleEnum
              */
             $table->string('role');
+
+            $table->string('telegram_id')->nullable();
+
+            $table->boolean('send_telegram')->default(false);
+            $table->boolean('send_email')->default(false);
+
             $table->rememberToken();
             $table->timestamps();
         });

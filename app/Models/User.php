@@ -10,6 +10,10 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
+    /**
+     * Unread user notifications :
+     * ========== $user->unreadNotifications =======
+     */
     use HasFactory, Notifiable, HasApiTokens;
 
     /**
@@ -21,7 +25,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'telegram_id',
+        'send_telegram',
+        'send_email'
     ];
 
     /**
@@ -41,11 +48,18 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'role' => UserRoleEnum::class
+        'role' => UserRoleEnum::class,
+        'send_telegram' => 'boolean',
+        'send_email' => 'boolean',
     ];
 
     public function stockFilter()
     {
         return $this->hasOne(StockFilter::class);
+    }
+
+    public function verifications()
+    {
+        return $this->hasMany(UserVerification::class);
     }
 }

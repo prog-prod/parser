@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\User\ProfilePasswordController;
 use App\Http\Controllers\Api\User\LogoutController;
 use App\Http\Controllers\Api\User\StockFilterSettingsController;
 use App\Http\Controllers\Api\User\DashboardController;
+use App\Http\Controllers\Api\User\VerificationController;
+use App\Http\Controllers\Api\User\TrackVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,14 @@ Route::group(['middleware' => ['auth:api']], function() {
         Route::put('profile', [ProfileController::class, 'update']);
         Route::put('profile/password', ProfilePasswordController::class);
         Route::put('profile/stock-filter/settings', StockFilterSettingsController::class);
+
+        Route::group(['prefix' => 'verification'], function() {
+            Route::post('telegram', [VerificationController::class, 'telegram']);
+
+            Route::group(['prefix' => 'verified'], function() {
+                Route::get('telegram', [TrackVerificationController::class, 'telegram']);
+            });
+        });
 
         Route::delete('logout', LogoutController::class);
     });

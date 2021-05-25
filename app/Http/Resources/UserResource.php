@@ -19,7 +19,10 @@ class UserResource extends JsonResource
             'email' => (string) $this->email,
             'name' => (string) $this->name,
             'role' => (string) $this->role->value,
-            'stock_filter' => new UserStockFilterResource($this->stockFilter)
+            'stock_filter' => new UserStockFilterResource($this->stockFilter),
+            'telegram_id' => (int) $this->telegram_id ?: null,
+            'send_telegram' => (bool) $this->send_telegram,
+            'send_email' => (bool) $this->send_email
         ];
     }
 }

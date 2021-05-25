@@ -17,6 +17,30 @@
                                     <label for="email" class="col-form-label">E-mail</label>
                                     <input class="form-control" type="email" v-model="user.email" id="email">
                                 </div>
+                                <div class="mb-3">
+                                    <label class="col-form-label">Notifications</label>
+                                    <div class="d-flex full-width">
+                                        <div class="form-check form-switch form-switch-lg mb-3 full-width w-100">
+                                            <input type="checkbox" class="form-check-input" id="email_notifications" v-model="user.send_email">
+                                            <label class="form-check-label" for="email_notifications">Email</label>
+                                        </div>
+                                        <div class="form-check form-switch form-switch-lg mb-3 full-width w-100">
+                                            <input type="checkbox" class="form-check-input" id="telegram_notifications" v-model="user.send_telegram">
+                                            <label class="form-check-label" for="telegram_notifications">Telegram</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="user.send_telegram" class="mb-3">
+                                    <div v-if="notification.telegram.sent" class="form-group w-100">
+                                        <label class="col-form-label">Please send code <strong class="primary btn-lg">{{  notification.telegram.code }}</strong> to our telegram bot.</label>
+                                        <a :href="notification.telegram.botUrl" @click="telegramAuthTracker()" target="_blank" class="btn w-md btn-dark w-100">Open Telegram Bot</a>
+                                    </div>
+                                    <div v-if="!notification.telegram.sent">
+                                        <p v-if="user.telegram_id">Your Telegram ID: {{ user.telegram_id }}</p>
+                                        <button v-if="user.telegram_id === null" @click.prevent="telegramAuthorize()" type="button" class="btn btn-primary w-md w-100">Authorize Telegram</button>
+                                        <button v-else @click.prevent="telegramAuthorize()" type="button" class="btn btn-primary w-md w-100">Re-authorize in Telegram</button>
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn btn-primary w-md">Save</button>
                             </div>
                         </div>
@@ -70,6 +94,7 @@
 
 <script>
 import UserService from '../../../shared/services/user.service';
+import VerificationService from '../../../shared/services/verification.service';
 
 export default {
     data: () => {
@@ -83,7 +108,15 @@ export default {
             stock_filter: {
                 min_price: null,
                 max_price: null
-            }
+            },
+            notification: {
+                telegram: {
+                    sent: false,
+                    code: null,
+                    botUrl: null
+                }
+            },
+            notificationInterval: null
         }
     },
     mounted() {
@@ -110,6 +143,26 @@ export default {
                 this.$store.dispatch('updateStockFilterSettings', response.stock_filter);
                 this.$toasted.success(response.message);
             });
+        },
+        telegramAuthorize: function() {
+            VerificationService.telegram().then((response) => {
+                this.notification.telegram.sent = true;
+                this.notification.telegram.code = response.code;
+                this.notification.telegram.botUrl = response.botUrl;
+            })
+        },
+        telegramAuthTracker: function() {
+            this.notificationInterval = setInterval(() => {
+                VerificationService.trackTelegram(this.notification.telegram.code).then((response) => {
+                    if (! response.approved) {
+                        clearInterval(this.notificationInterval);
+                        this.user = response.user;
+                        this.notification.telegram.sent = false;
+
+                        this.$toasted.success(response.message);
+                    }
+                });
+            }, 2000);
         }
     }
 }
