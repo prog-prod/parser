@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockOverviewsTable extends Migration
+class CreateStockOverviewsHistoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStockOverviewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stock_overviews', function (Blueprint $table) {
+        Schema::create('stock_overviews_history', function (Blueprint $table) {
             $table->id();
             $table->integer('stock_id');
             $table->boolean("isOtc");
@@ -69,6 +69,6 @@ class CreateStockOverviewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_overviews');
+        Schema::dropIfExists('stock_overviews_history');
     }
 }

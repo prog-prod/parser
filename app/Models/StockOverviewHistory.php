@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockOverview extends Model
+class StockOverviewHistory extends Model
 {
     use HasFactory;
+
+    protected $table = 'stock_overviews_history';
+    public $timestamps = true;
 
     protected $fillable = [
     	"stock_id",
@@ -54,5 +57,4 @@ class StockOverview extends Model
 		"isProfileVerified",
 		"profileVerifiedAsOfDate"
     ];
-    
 }
