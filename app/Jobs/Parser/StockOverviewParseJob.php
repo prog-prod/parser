@@ -39,6 +39,8 @@ class StockOverviewParseJob implements ShouldQueue
             'symbol' => $this->stock->symbol
         ])->json();
 
+        $response['symbol'] = $this->stock->symbol;
+
         $this->stock->overview()->updateOrCreate(['symbol' => $response['symbol']], $response);
 
         StockOverviewParseJob::dispatch($this->stock)->delay(now()->addHours(rand(3,10)));
