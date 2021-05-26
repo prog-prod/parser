@@ -12,9 +12,9 @@
                                 <th v-for="column in columns" :key="column" @click="sortByColumn(column)" class="table-head">
                                     {{ column | columnHead }}
                                     <span v-if="column === sortedColumn">
-                                    <i v-if="order === 'asc' " class="fas fa-arrow-up"></i>
-                                    <i v-else class="fas fa-arrow-down"></i>
-                                </span>
+                                        <i v-if="order === 'asc' " class="fas fa-arrow-up"></i>
+                                        <i v-else class="fas fa-arrow-down"></i>
+                                    </span>
                                 </th>
                             </tr>
                             </thead>
@@ -24,7 +24,16 @@
                             </tr>
                             <tr v-for="(data, key1) in socks" :key="data.id" class="m-datatable__row" v-else>
                                 <td>{{ serialNumber(key1) }}</td>
-                                <td v-for="(value, key) in data">{{ value }}</td>
+                                <td v-for="(column, columnKey) in columns">
+                                    <div v-for="(value, key) in data">
+                                        <div v-if="column === key">
+                                            <router-link v-if="key === 'symbol'" :to="{name: 'dashboard.stocks.show', params: {id: data.id}}">
+                                                <span>{{ value }}</span>
+                                            </router-link>
+                                            <span v-else>{{ value }}</span>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -51,7 +60,7 @@
 
 <script>
 
-import DashboardService from '../../shared/services/dashboard.service';
+import StockService from '../../shared/services/stock.service';
 
 export default {
     data() {
@@ -94,7 +103,7 @@ export default {
     },
     methods: {
         fetchData() {
-            DashboardService.stocks({page: this.currentPage, column: this.sortedColumn, order: this.order, per_page: this.perPage}).then((response) => {
+            StockService.list({page: this.currentPage, column: this.sortedColumn, order: this.order, per_page: this.perPage}).then((response) => {
                 this.socks = response.stocks;
                 this.pagination = response.pagination;
                 this.columns = ['id', 'symbol', 'price', 'securityName', 'market', 'securityType', 'country', 'pct1Day', 'shortInterest', 'shortInterestPercent', 'volume', 'isBank'];

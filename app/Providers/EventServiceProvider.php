@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Stock;
 use App\Models\StockOverview;
 use App\Models\User;
+use App\Observers\StockObserver;
 use App\Observers\StockOverviewObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
@@ -32,5 +34,6 @@ class EventServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         StockOverview::observe(StockOverviewObserver::class);
+        Stock::observe(StockObserver::class);
     }
 }

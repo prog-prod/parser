@@ -15,9 +15,8 @@ class CreateStockNewsTable extends Migration
     {
         Schema::create('stock_news', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignIdFor(\App\Models\Stock::class);
             $table->integer("original_id");
-            $table->integer("stock_id");
             $table->integer("companyId");
             $table->integer("userId");
             $table->text("title");

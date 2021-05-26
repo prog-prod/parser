@@ -6,6 +6,11 @@
                 <div class="page-content">
                     <div class="container-fluid">
                         <div class="dashboard">
+                            <div class="card">
+                                <div class="card-header">
+                                    <slot name="breadcrumb-name"></slot>
+                                </div>
+                            </div>
                             <!-- content page -->
                             <slot name="content"></slot>
                             <!-- end content page -->

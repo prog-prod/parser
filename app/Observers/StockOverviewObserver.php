@@ -26,6 +26,23 @@ class StockOverviewObserver
      */
     public function updating(StockOverview $stockOverview)
     {
-        NotifyUsersAboutUpdatedStockJob::dispatchNow($stockOverview);
+        // create history row of stock overview
+        $diff = $stockOverview->makeHidden('id', 'updated_at', 'created_at');
+
+        $originalDiff = $diff->getRawOriginal();
+        unset($originalDiff['id']);
+        unset($originalDiff['updated_at']);
+        unset($originalDiff['created_at']);
+
+        // if original data and current data is different - creating history row and notifications
+        if (array_diff($originalDiff, $diff->toArray()))
+        {
+            $stockOverview->history()->create(
+                $originalDiff
+            );
+
+            // make notifications in telegram about stock overview changes (a lot of data in this table)
+            NotifyUsersAboutUpdatedStockJob::dispatchNow($stockOverview);
+        }
     }
 }

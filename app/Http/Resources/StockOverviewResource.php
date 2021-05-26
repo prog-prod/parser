@@ -15,6 +15,7 @@ class StockOverviewResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "stock_id" => $this->stock_id,
             "isOtc" => $this->isOtc,
             "symbol" => $this->symbol,
@@ -30,20 +31,20 @@ class StockOverviewResource extends JsonResource
             "quoteTime" => $this->quoteTime,
             "quoteDateTime" => $this->quoteDateTime,
             "insideTime" => $this->insideTime,
-            "bidPrice" => $this->bidPrice,
+            "bidPrice" => number_format($this->bidPrice ?? 0, 2, '.', ','),
             "bidSize" => $this->bidSize,
-            "askPrice" => $this->askPrice,
+            "askPrice" => number_format($this->askPrice ?? 0, 2, '.', ','),
             "askSize" => $this->askSize,
-            "dailyHigh" => $this->dailyHigh,
-            "dailyLow" => $this->dailyLow,
-            "openingPrice" => $this->openingPrice,
-            "annualHigh" => $this->annualHigh,
-            "annualLow" => $this->annualLow,
-            "dividend" => $this->dividend,
+            "dailyHigh" => number_format($this->dailyHigh ?? 0, 2, '.', ','),
+            "dailyLow" => number_format($this->dailyLow ?? 0, 2, '.', ','),
+            "openingPrice" => number_format($this->openingPrice ?? 0, 2, '.', ','),
+            "annualHigh" => number_format($this->annualHigh ?? 0, 2, '.', ','),
+            "annualLow" => number_format($this->annualLow ?? 0, 2, '.', ','),
+            "dividend" => number_format($this->dividend, 2, '.', ','),
             "eps" => $this->eps,
             "previousClose" => $this->previousClose,
             "peRatio" => $this->peRatio,
-            "yield" => $this->yield,
+            "yield" => number_format($this->yield, 2, '.', ','),
             "betaCoefficient" => $this->betaCoefficient,
             "exchangeCode" => $this->exchangeCode,
             "exchangeName" => $this->exchangeName,
@@ -51,11 +52,12 @@ class StockOverviewResource extends JsonResource
             "isADR" => $this->isADR,
             "realtime" => $this->realtime,
             "pinkLinkRealtime" => $this->pinkLinkRealtime,
-            "thirtyDaysAvgVol" => $this->thirtyDaysAvgVol,
+            "thirtyDaysAvgVol" => number_format($this->thirtyDaysAvgVol, 0, '', ','),
             "showRealtimeAd" => $this->showRealtimeAd,
-            "marketCap" => $this->marketCap,
-            "sharesOutstanding" => $this->sharesOutstanding,
-            "adr" => $this->adr
+            "marketCap" => number_format($this->marketCap, 0, '', ','),
+            "sharesOutstanding" => number_format($this->sharesOutstanding, 0, '', ','),
+            "adr" => $this->adr,
+            "history" => StockOverviewResource::collection($this->history)
         ];
     }
 }

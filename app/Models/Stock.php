@@ -73,6 +73,31 @@ class Stock extends Model
     {
         return $query->whereBetween('price', $range);
     }
+
+    public function overview()
+    {
+        return $this->hasOne(StockOverview::class, 'stock_id', 'id');
+    }
+
+    public function history()
+    {
+        return $this->hasMany(StocksHistory::class, 'stock_id', 'id');
+    }
+
+    public function news()
+    {
+        return $this->hasMany(StockNews::class, 'stock_id', 'id');
+    }
+
+    public function corporateActions()
+    {
+        return $this->hasMany(StockCorporateAction::class);
+    }
+
+    public function companyProfile()
+    {
+        return $this->hasOne(StockCompanyProfile::class, 'stock_id', 'id');
+    }
 }
 
 

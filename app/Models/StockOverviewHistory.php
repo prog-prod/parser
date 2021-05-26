@@ -13,6 +13,7 @@ class StockOverviewHistory extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        "stock_overview_id",
     	"stock_id",
     	"isOtc",
 		"symbol",

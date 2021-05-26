@@ -26,10 +26,16 @@ const router = new VueRouter({
             meta: { guest: true, admin: false }
         },
         {
-            path: '/dashboard',
+            path: '/dashboard/stocks',
             component: () => import('./components/Dashboard/DashboardComponent.vue'),
             meta: { guest: false, admin: false },
             name: 'dashboard'
+        },
+        {
+            path: '/dashboard/stocks/:id',
+            component: () => import('./components/Dashboard/Stock/StockComponent.vue'),
+            meta: { guest: false, admin: false },
+            name: 'dashboard.stocks.show'
         },
         {
             path: '/dashboard/logout',

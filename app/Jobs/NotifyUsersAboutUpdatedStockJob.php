@@ -91,6 +91,17 @@ class NotifyUsersAboutUpdatedStockJob implements ShouldQueue
                 $notificationMessage .= $this->formatMessage('Price changed', '$' . (float) $newData, 'Percentage change in price', (float) $this->stockOverview->percentChange . '%');
             }
 
+            /**
+             * Generate alert when Volume is “4 times” higher than Average Vol.
+             *
+             * TODO: add settings for dynamic "4 times"
+             */
+            if ($this->stockOverview->volume > ($this->stockOverview->thirtyDaysAvgVol * 4))
+            {
+                $notificationMessage .= '*' . StockUpdatedTypeEnum::volumeHigherThanAverageVol()->label . '*';
+                $notificationMessage .= $this->formatMessage('Current Volume', $this->stockOverview->volume, 'AVERAGE VOL (30D)', $this->stockOverview->thirtyDaysAvgVol);
+            }
+
             Notification::send($notifyUsers, new StockUpdated($this->stockOverview, $notificationMessage));
         }
     }

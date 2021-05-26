@@ -54,5 +54,9 @@ class StockOverview extends Model
 		"isProfileVerified",
 		"profileVerifiedAsOfDate"
     ];
-    
+
+    public function history()
+    {
+        return $this->hasMany(StockOverviewHistory::class);
+    }
 }

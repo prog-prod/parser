@@ -15,7 +15,8 @@ class CreateStocksHistoryTable extends Migration
     {
         Schema::create('stocks_history', function (Blueprint $table) {
             $table->id();
-            
+
+            $table->foreignIdFor(\App\Models\Stock::class);
             $table->integer("securityId")->nullable();
             $table->text("reportDate")->nullable();
             $table->text("symbol")->nullable();

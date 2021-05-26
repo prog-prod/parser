@@ -13,6 +13,7 @@ class StocksHistory extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        "stock_id",
     	"securityId",
 		"reportDate",
 		"symbol",
@@ -70,4 +71,9 @@ class StocksHistory extends Model
 		"perfQxCan13Weeks",
 		"perfQxCan52Weeks"
     ];
+
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
+    }
 }

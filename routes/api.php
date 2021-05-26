@@ -8,9 +8,9 @@ use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\ProfilePasswordController;
 use App\Http\Controllers\Api\User\LogoutController;
 use App\Http\Controllers\Api\User\StockFilterSettingsController;
-use App\Http\Controllers\Api\User\DashboardController;
 use App\Http\Controllers\Api\User\VerificationController;
 use App\Http\Controllers\Api\User\TrackVerificationController;
+use App\Http\Controllers\Api\Stock\StockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +46,5 @@ Route::group(['middleware' => ['auth:api']], function() {
         Route::delete('logout', LogoutController::class);
     });
 
-    Route::get('dashboard', [DashboardController::class, 'dashboard']);
-    Route::get('stock/{stock}', [DashboardController::class, 'stock']);
+    Route::apiResource('stocks', StockController::class);
 });

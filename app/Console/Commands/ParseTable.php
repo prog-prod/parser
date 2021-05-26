@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Parser\StockParseJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use App\Models\Stock;
-use App\Models\StocksHistory;
 
 class ParseTable extends Command
 {
@@ -21,7 +19,7 @@ class ParseTable extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Running job which parsing all stocks.';
 
     /**
      * Create a new command instance.
@@ -36,44 +34,12 @@ class ParseTable extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return bool
      */
-    public function handle()
+    public function handle() : bool
     {
+        StockParseJob::dispatch();
 
-        $s_o = Stock::all();
-
-        if($s_o != null){
-
-            $s_o = $s_o->makeHidden(['id', 'created_at', 'updated_at'])->toArray();
-            
-            foreach ($s_o as $s) {
-
-                StocksHistory::create($s);
-                
-                ECHO "copy-". $s['symbol'] .PHP_EOL;
-            }
-            
-            ECHO "copy- success" .PHP_EOL;
-        }
-
-        $response = Http::get('https://www.otcmarkets.com/research/stock-screener/api', [
-            'pageSize' => 15000,
-            'market' => '6,5,2,1,10,20,21,22,40'
-        ]);
-
-        $array = json_decode($response->json(), true);
-    
-        ECHO count($array).PHP_EOL;
-        
-        foreach ($array['stocks'] as $key => $value) {
-            
-            Stock::insert($value);
-
-            ECHO $key.PHP_EOL;
-        }
-
-        return 'Inserted: count '.$array['count'];
-
+        return true;
     }
 }

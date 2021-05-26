@@ -16,6 +16,7 @@ use Spatie\Enum\Laravel\Enum;
  * @method static self dailyHighChanged()
  * @method static self dailyLowChanged()
  * @method static self priceChanged()
+ * @method static self volumeHigherThanAverageVol()
  */
 final class StockUpdatedTypeEnum extends Enum
 {
@@ -33,7 +34,8 @@ final class StockUpdatedTypeEnum extends Enum
             'lastPriceChanged' => 'Last Price was changed.',
             'dailyHighChanged' => 'Maximum price per day.',
             'dailyLowChanged' => 'Minimum price per day.',
-            'priceChanged' => 'Price was changed.'
+            'priceChanged' => 'Price was changed.',
+            'volumeHigherThanAverageVol' => 'Volume higher than Average Vol'
         ];
     }
 }

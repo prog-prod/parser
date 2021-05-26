@@ -15,6 +15,7 @@ class CreateStockOverviewsHistoryTable extends Migration
     {
         Schema::create('stock_overviews_history', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(\App\Models\StockOverview::class);
             $table->integer('stock_id');
             $table->boolean("isOtc");
             $table->text("symbol");

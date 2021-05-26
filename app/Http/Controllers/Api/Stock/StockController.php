@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Api\User;
+namespace App\Http\Controllers\Api\Stock;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Resources\StockResource;
 use App\Http\Resources\StockOverviewResource;
+use App\Http\Resources\StockResource;
 use App\Models\Stock;
 use App\Models\StockOverview;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class DashboardController extends Controller
+class StockController extends Controller
 {
-    public function dashboard(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $stockFilter = auth()->user()->stockFilter;
 
-    	$stocks = Stock::priceRange([$stockFilter->min_price, $stockFilter->max_price])
+        $stocks = Stock::priceRange([$stockFilter->min_price, $stockFilter->max_price])
             ->orderBy($request->column ?? 'created_at', $request->order ?? 'desc')
             ->paginate($request->per_page ?? 20);
 
-    	return response()->json([
-    	    'result' => true,
+        return response()->json([
+            'result' => true,
             'stocks' => StockResource::collection($stocks),
             'pagination' => [
                 'current_page' => (int) $stocks->currentPage(),
@@ -34,20 +35,17 @@ class DashboardController extends Controller
         ], 200);
     }
 
-    public function stock($symbol): JsonResponse
+    /**
+     * Display the specified resource.
+     *
+     * @param  Stock  $stock
+     * @return JsonResponse
+     */
+    public function show(Stock $stock): JsonResponse
     {
-        $stock = StockOverview::where('symbol', $symbol)->first();
-
-        if (is_null($stock)) {
-            
-            return response()->json([
-                'result' => false
-            ], 404);
-        }
-
         return response()->json([
             'result' => true,
-            'stock' => new StockOverviewResource($stock)
+            'stock' => new StockResource($stock)
         ], 200);
     }
 }
