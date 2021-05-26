@@ -99,7 +99,7 @@ class CreateStockCompanyProfilesTable extends Migration
             $table->unsignedBigInteger('restrictedSharesAsOfDate')->nullable();
             $table->unsignedBigInteger('unrestrictedSharesAsOfDate')->nullable();
 
-            $table->unsignedBigInteger('estimatedMarketCap')->nullable();
+            $table->unsignedFloat('estimatedMarketCap', 15, 5)->nullable();
             $table->integer('numberOfEmployees')->nullable();
             $table->bigInteger('numberOfEmployeesAsOf')->nullable();
             $table->integer('numberOfRecordShareholders')->nullable();
