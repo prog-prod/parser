@@ -16,9 +16,9 @@ class CreateStockOverviewsTable extends Migration
         Schema::create('stock_overviews', function (Blueprint $table) {
             $table->id();
             $table->integer('stock_id');
-            $table->boolean("isOtc")->default(false);
+            $table->boolean("isOtc");
             $table->text("symbol");
-            $table->integer("securityId")->nullable();
+            $table->integer("securityId");
             $table->text("lastSale")->nullable();
             $table->text("change")->nullable();
             $table->text("percentChange")->nullable();
