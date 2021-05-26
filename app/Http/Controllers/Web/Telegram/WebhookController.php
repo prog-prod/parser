@@ -25,6 +25,7 @@ class WebhookController extends Controller
             if ($verification)
             {
                 $verification->user->telegram_id = $request->message['from']['id'];
+                $verification->user->send_telegram = true;
                 $verification->user->save();
                 $verification->delete();
             }
