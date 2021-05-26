@@ -51,6 +51,10 @@ class StockCompanyProfileParseJob implements ShouldQueue
                 'stock_id' => $this->stock->id
             ]);
 
+            if ($response['tierStartDate'] < 0) {
+                $response['tierStartDate'] = 0;
+            }
+
             $companyProfile->fill($response);
             $companyProfile->save();
         }
