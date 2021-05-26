@@ -39,7 +39,7 @@ class CreateStockCompanyProfilesTable extends Migration
             $table->string('cik')->nullable();
             $table->string('city')->nullable();
             $table->string('companyLogoUrl')->nullable();
-            $table->string('corporateBrokers')->nullable();
+            $table->longText('corporateBrokers')->nullable();
             $table->string('country')->nullable();
             $table->string('countryId')->nullable();
             $table->string('countryOfIncorporation')->nullable();
