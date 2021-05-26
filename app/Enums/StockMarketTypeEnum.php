@@ -39,7 +39,7 @@ final class StockMarketTypeEnum extends Enum
     // TODO : re-check category array
     public function category()
     {
-        return match($this->value) {
+        return [
             'expertMarket' => 40,
 //            'pink' => [
 //                self::pinkNoInformation()->category,
@@ -60,8 +60,7 @@ final class StockMarketTypeEnum extends Enum
             'pinkLimited' => 21,
             'pinkCurrent' => 20,
             'otcqb' => 10,
-            default => '',
-        };
+        ][$this->value];
     }
 
     public static function getCategoriesIds()
