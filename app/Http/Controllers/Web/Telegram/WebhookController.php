@@ -16,7 +16,7 @@ class WebhookController extends Controller
      */
     public function __invoke(Request $request)
     {
-        if (isset($request->message['chat']['id']))
+        if (isset($request->message['chat']['id']) && isset($request->message['text']))
         {
             $code = $request->message['text'];
 
