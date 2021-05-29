@@ -30,10 +30,10 @@
 <script>
 export default {
     created: function() {
-        this.$preloader.hide();
+        // this.$preloader.hide();
     },
     beforeCreate: function () {
-        this.$preloader.show();
+        // this.$preloader.show();
         $('body').addClass('authentication-bg');
     },
     beforeRouteLeave: function (to, from, next) {
