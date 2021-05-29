@@ -72,7 +72,20 @@ export default {
             perPage: 20,
             sortedColumn: 'id',
             order: 'asc',
-            columns: [],
+            columns: [
+                'id',
+                'symbol',
+                'price',
+                'securityName',
+                'market',
+                'securityType',
+                'country',
+                'pct1Day',
+                'shortInterest',
+                'shortInterestPercent',
+                'volume',
+                'isBank'
+            ]
         }
     },
     created() {
@@ -103,10 +116,14 @@ export default {
     },
     methods: {
         fetchData() {
-            StockService.list({page: this.currentPage, column: this.sortedColumn, order: this.order, per_page: this.perPage}).then((response) => {
+            StockService.list({
+                page: this.currentPage,
+                column: this.sortedColumn,
+                order: this.order,
+                per_page: this.perPage
+            }).then((response) => {
                 this.socks = response.stocks;
                 this.pagination = response.pagination;
-                this.columns = ['id', 'symbol', 'price', 'securityName', 'market', 'securityType', 'country', 'pct1Day', 'shortInterest', 'shortInterestPercent', 'volume', 'isBank'];
             });
         },
         /**

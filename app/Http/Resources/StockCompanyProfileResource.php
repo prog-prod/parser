@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StockCompanyProfileResource extends JsonResource
@@ -96,7 +97,7 @@ class StockCompanyProfileResource extends JsonResource
 
             /** Timestamp's */
             'deregistrationDate' => (int) $this->deregistrationDate,
-            'estimatedMarketCapAsOfDate' => (int) $this->estimatedMarketCapAsOfDate,
+            'estimatedMarketCapAsOfDate' => $this->estimatedMarketCapAsOfDate,
             'latestFilingDate' => (int) $this->latestFilingDate,
             'numberOfRecordShareholdersDate' => (int) $this->numberOfRecordShareholdersDate,
             'tierStartDate' => (int) $this->tierStartDate,
