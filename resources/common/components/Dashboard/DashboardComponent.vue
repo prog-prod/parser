@@ -9,7 +9,7 @@
                             <thead>
                             <tr>
                                 <th class="table-head">#</th>
-                                <th v-for="column in columns" :key="column" @click="sortByColumn(column)" class="table-head">
+                                <th v-for="column in columns" class="table-head cursor-pointer" :key="column" @click="sortByColumn(column)">
                                     {{ column | columnHead }}
                                     <span v-if="column === sortedColumn">
                                         <i v-if="order === 'asc' " class="fas fa-arrow-up"></i>
@@ -144,3 +144,9 @@ export default {
     },
 }
 </script>
+
+<style>
+    .cursor-pointer{
+        cursor: pointer;
+    }
+</style>
