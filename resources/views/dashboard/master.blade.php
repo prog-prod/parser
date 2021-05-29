@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/template.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme.min.css') }}">
 
-    <script>window.Laravel = { csrfToken : '{{ csrf_token() }}' };</script>
+    <script>
+        window.Laravel = { csrfToken : '{{ csrf_token() }}' };
+        window.telegramBotSlug = '{{env('TELEGRAM_BOT_SLUG')}}';
+    </script>
     <script src="{{ mix('assets/js/app.min.js') }}" defer></script>
 </head>
 <body>

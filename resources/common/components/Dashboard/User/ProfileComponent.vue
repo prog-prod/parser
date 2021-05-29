@@ -32,7 +32,8 @@
                                 </div>
                                 <div v-if="user.send_telegram" class="mb-3">
                                     <div v-if="notification.telegram.sent" class="form-group w-100">
-                                        <label class="col-form-label">Please send code <strong class="primary btn-lg">{{  notification.telegram.code }}</strong> to our telegram bot.</label>
+                                        <label class="col-form-label">Please send code <strong class="primary btn-lg">{{  notification.telegram.code }}</strong> to our telegram bot
+                                            <a class="d-block text-right" :href="'https://t.me/'+telegramBotSlug">@{{telegramBotSlug}}</a></label>
                                         <a :href="notification.telegram.botUrl" @click="telegramAuthTracker()" target="_blank" class="btn w-md btn-dark w-100">Open Telegram Bot</a>
                                     </div>
                                     <div v-if="!notification.telegram.sent">
@@ -100,6 +101,7 @@ export default {
     data: () => {
         return {
             user: {},
+            telegramBotSlug: window.telegramBotSlug,
             password: {
                 current_password: '',
                 password: '',
@@ -172,4 +174,8 @@ export default {
 form label {
     padding-left: 0px !important;
 }
+.text-right{
+    text-align: right !important;
+}
+
 </style>
