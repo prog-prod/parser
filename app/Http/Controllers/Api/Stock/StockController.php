@@ -17,7 +17,9 @@ class StockController extends Controller
     {
         $stockFilter = auth()->user()->stockFilter;
 
-        $stocks = Stock::priceRange([$stockFilter->min_price, $stockFilter->max_price])
+        $price_range = $stockFilter->getPricesRange($request->price_min ?? null, $request->price_max ?? null);
+
+        $stocks = Stock::priceRange($price_range)
             ->orderBy($request->column ?? 'created_at', $request->order ?? 'desc')
             ->paginate($request->per_page ?? 20);
 
