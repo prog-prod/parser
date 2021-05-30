@@ -23,12 +23,12 @@ class StockController extends Controller
             'result' => true,
             'stocks' => StockResource::collection($stocks),
             'pagination' => [
-                'current_page' => (int) $stocks->currentPage(),
-                'last_page' => (int) $stocks->lastPage(),
-                'previous_page' => (string) $stocks->previousPageUrl() ?: null,
-                'next_page' => (string) $stocks->nextPageUrl() ?: null,
-                'per_page' => (int) $stocks->perPage(),
-                'total' => (int) $stocks->total(),
+                'current_page' => (int)$stocks->currentPage(),
+                'last_page' => (int)$stocks->lastPage(),
+                'previous_page' => (string)$stocks->previousPageUrl() ?: null,
+                'next_page' => (string)$stocks->nextPageUrl() ?: null,
+                'per_page' => (int)$stocks->perPage(),
+                'total' => (int)$stocks->total(),
             ]
         ], 200);
     }
@@ -36,7 +36,7 @@ class StockController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Stock  $stock
+     * @param Stock $stock
      * @return JsonResponse
      */
     public function show(Stock $stock): JsonResponse
