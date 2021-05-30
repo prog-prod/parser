@@ -30,7 +30,7 @@ class StockResource extends JsonResource
             'overview' => new StockOverviewResource($this->overview),
             'history' => StockResource::collection($this->history),
             'companyProfile' => new StockCompanyProfileResource($this->companyProfile),
-            'news' => StockNewsResource::collection($this->news),
+//            'news' => StockNewsResource::collection($this->news),
             'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions)
         ];
     }
