@@ -1,10 +1,13 @@
 <template>
     <main-component>
         <h4 slot="breadcrumb-name" class="mb-0">Dashboard</h4>
+        <template #filters>
+            <FilterPrice @max-price="maxPrice" @min-price="minPrice"/>
+            <FilterMarket/>
+        </template>
         <div slot="content" class="dashboard">
             <div class="card">
                 <div class="card-body">
-                    <FilterPrice @max-price="maxPrice" @min-price="minPrice"/>
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
                             <thead>
@@ -61,15 +64,17 @@
 
 <script>
 import FilterPrice from "./Stock/components/FilterPrice";
+import FilterMarket from "./Stock/components/FilterMarket";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-    components: {FilterPrice},
+    components: {FilterPrice, FilterMarket},
     data() {
         return {
             filters:{
                 price_min: null,
-                price_max: null
+                price_max: null,
+                market: null
             },
             stockFiltered: {
                 items: [],
@@ -140,12 +145,12 @@ export default {
         },
         getFilters(){
             let filters = {};
-            if(this.filters.price_min){
-                filters = {...filters, price_min: this.filters.price_min}
+            for(let filter in this.filters){
+                if(this.filters[filter]){
+                    filters = {...filters, price_min: this.filters[filter]}
+                }
             }
-            if(this.filters.price_max){
-                filters = {...filters, price_max: this.filters.price_max}
-            }
+
             return filters;
         },
         async fetchData(){

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Stock;
 
+use App\Enums\StockMarketTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MarketListResource;
 use App\Http\Resources\StockOverviewResource;
 use App\Http\Resources\StockResource;
 use App\Models\Stock;
@@ -48,6 +50,16 @@ class StockController extends Controller
         return response()->json([
             'result' => true,
             'stock' => new StockResource($stock)
+        ], 200);
+    }
+
+
+    public function getMarketList(): JsonResponse
+    {
+
+        return response()->json([
+            'result' => true,
+            'marketList' => StockMarketTypeEnum::labels()
         ], 200);
     }
 }

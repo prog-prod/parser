@@ -1,14 +1,24 @@
 <template>
-    <div>Filter Pice
-        <div class="d-flex">
-            <div class="d-flex me-3">
-                <label for="filter-price-min" class="col-form-label me-1">Min</label>
-                <input class="form-control" type="number" @change="filterPrice('min')" v-model="price.min" id="filter-price-min">
+    <div>
+        <div class="card">
+            <div class="card-header" data-bs-toggle="collapse" href="#collapseFilterPrice" role="button" aria-expanded="false" aria-controls="collapseFilterPrice">
+                <h6>Filter Pice</h6>
             </div>
-            <div class="d-flex">
-                <label for="filter-price-max" class="col-form-label me-1">Max</label>
-                <input class="form-control" type="number" @change="filterPrice('max')" v-model="price.max" id="filter-price-max">
+            <div class="collapse" id="collapseFilterPrice">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="d-flex me-3">
+                            <label for="filter-price-min" class="col-form-label me-1">Min</label>
+                            <input class="form-control" type="number" @change="filterPrice('min')" v-model="price.min" id="filter-price-min">
+                        </div>
+                        <div class="d-flex">
+                            <label for="filter-price-max" class="col-form-label me-1">Max</label>
+                            <input class="form-control" type="number" @change="filterPrice('max')" v-model="price.max" id="filter-price-max">
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </template>

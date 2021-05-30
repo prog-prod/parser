@@ -8,5 +8,8 @@ export default {
     },
     show(stock_id) {
         return httpClient.get(`${RESOURCE_NAME}/${stock_id}`);
+    },
+    getMarketList(){
+        return httpClient.get(`stock/get-market-list`);
     }
 };
