@@ -4,7 +4,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-pills nav-justified bg-light" role="tablist">
                 <li class="nav-item waves-effect waves-light" v-for="tab in tabs">
-                    <a class="nav-link active" data-bs-toggle="tab" :href="`#${tab.id}`" role="tab" :aria-selected="tab.id === 'overview'">
+                    <a class="nav-link" :class="{'active':tab.id === 'overview'}" data-bs-toggle="tab" :href="`#${tab.id}`" role="tab" :aria-selected="tab.id === 'overview'">
                         <span class="d-block d-sm-none"><i :class="tab.icon"></i></span>
                         <span class="d-none d-sm-block">{{tab.text}}</span>
                     </a>

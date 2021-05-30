@@ -1,6 +1,6 @@
 <template>
     <main-component>
-        <Breadcrumbs>Details of Stock #{{ stock.id }}</Breadcrumbs>
+        <Breadcrumbs slot="breadcrumb-name">Details of Stock #{{ stock.id }}</Breadcrumbs>
         <div slot="content" class="dashboard">
             <DetailsCard :stock="stock"/>
             <TabsCard :stock="stock"/>
