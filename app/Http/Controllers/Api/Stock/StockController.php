@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Stock;
 
+use App\Enums\StockMarketTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StockOverviewResource;
 use App\Http\Resources\StockResource;
@@ -15,11 +16,8 @@ class StockController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $stockFilter = auth()->user()->stockFilter;
 
-        $stocks = Stock::priceRange([$stockFilter->min_price, $stockFilter->max_price])
-            ->orderBy($request->column ?? 'created_at', $request->order ?? 'desc')
-            ->paginate($request->per_page ?? 20);
+        $stocks = Stock::getAllWithFilter($request->all());
 
         return response()->json([
             'result' => true,
@@ -46,6 +44,17 @@ class StockController extends Controller
         return response()->json([
             'result' => true,
             'stock' => new StockResource($stock)
+        ], 200);
+    }
+    /**
+    * @return JsonResponse
+    */
+    public function getMarketList(): JsonResponse
+    {
+
+        return response()->json([
+            'result' => true,
+            'marketList' => collect(StockMarketTypeEnum::labels())->values()
         ], 200);
     }
 }

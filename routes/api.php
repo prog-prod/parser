@@ -47,4 +47,7 @@ Route::group(['middleware' => ['auth:api']], function() {
     });
 
     Route::apiResource('stocks', StockController::class);
+
+    Route::get('get-market-list', [StockController::class, 'getMarketList']);
 });
+

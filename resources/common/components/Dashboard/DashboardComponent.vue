@@ -1,6 +1,13 @@
 <template>
     <main-component>
         <h4 slot="breadcrumb-name" class="mb-0">Dashboard</h4>
+        <filters-component slot="filters"
+                           @max-price="maxPrice"
+                           @min-price="minPrice"
+                           @filter-market="filterMarket"
+                           @filter-country="filterCountry"
+                           @filter-symbol="filterSymbol"
+        />
         <div slot="content" class="dashboard">
             <div class="card">
                 <div class="card-body">
@@ -19,10 +26,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="" v-if="socks.length === 0">
+                            <tr class="" v-if="stockFiltered.items.length === 0">
                                 <td class="lead text-center" :colspan="columns.length + 1">No data found.</td>
                             </tr>
-                            <tr v-for="(data, key1) in socks" :key="data.id" class="m-datatable__row" v-else>
+                            <tr v-for="(data, key1) in items" :key="data.id" class="m-datatable__row" v-else>
                                 <td>{{ serialNumber(key1) }}</td>
                                 <td v-for="(column, columnKey) in columns">
                                     <div v-for="(value, key) in data">
@@ -38,16 +45,16 @@
                             </tbody>
                         </table>
                     </div>
-                    <nav v-if="pagination && socks.length > 0" class="mt-5">
+                    <nav v-if="stockFiltered.pagination && stockFiltered.items.length > 0" class="mt-5">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" :class="{'disabled' : currentPage === 1}">
                                 <a class="page-link" href="#" @click.prevent="changePage(currentPage - 1)">Previous</a>
                             </li>
                             <li v-for="page in pagesNumber" class="page-item"
-                                :class="{'active': page === pagination.current_page}">
+                                :class="{'active': page === stockFiltered.pagination.current_page}">
                                 <a href="javascript:void(0)" @click.prevent="changePage(page)" class="page-link">{{ page }}</a>
                             </li>
-                            <li class="page-item" :class="{'disabled': currentPage === pagination.last_page }">
+                            <li class="page-item" :class="{'disabled': currentPage === stockFiltered.pagination.last_page }">
                                 <a class="page-link" href="#" @click.prevent="changePage(currentPage + 1)">Next</a>
                             </li>
                         </ul>
@@ -59,14 +66,26 @@
 </template>
 
 <script>
-
-import StockService from '../../shared/services/stock.service';
+import FilterPrice from "./Stock/components/FilterPrice";
+import FilterMarket from "./Stock/components/FilterMarket";
+import {mapActions, mapGetters} from "vuex";
+import FiltersComponent from "./Stock/components/FiltersComponent";
 
 export default {
+    components: {FiltersComponent, FilterPrice, FilterMarket},
     data() {
         return {
-            socks: [],
-            pagination: {},
+            filters:{
+                price_min: null,
+                price_max: null,
+                market: null,
+                country: null,
+                symbol: null
+            },
+            stockFiltered: {
+                items: [],
+                pagination: {}
+            },
             offset: 4,
             currentPage: 1,
             perPage: 20,
@@ -88,24 +107,28 @@ export default {
             ]
         }
     },
-    created() {
-        return this.fetchData()
+    async created() {
+       await this.fetchData();
     },
     computed: {
+        ...mapGetters(['STOCKS']),
+        items(){
+            return this.stockFiltered.items;
+        },
         /**
          * Get the pages number array for displaying in the pagination.
          * */
         pagesNumber() {
-            if (!this.pagination.next_page) {
+            if (!this.stockFiltered.pagination.next_page) {
                 return []
             }
-            let from = this.pagination.current_page - this.offset
+            let from = this.stockFiltered.pagination.current_page - this.offset
             if (from < 1) {
                 from = 1
             }
             let to = from + (this.offset * 2)
-            if (to >= this.pagination.last_page) {
-                to = this.pagination.last_page
+            if (to >= this.stockFiltered.pagination.last_page) {
+                to = this.stockFiltered.pagination.last_page
             }
             let pagesArray = []
             for (let page = from; page <= to; page++) {
@@ -115,16 +138,53 @@ export default {
         },
     },
     methods: {
-        fetchData() {
-            StockService.list({
+        ...mapActions(['FETCH_STOCK_DATA']),
+        maxPrice(price){
+            this.filters.price_max = price
+            this.fetchData();
+            // this.stockFiltered.items = this.STOCKS.items.map(d => ({...d})).filter(d => d.price <= price);
+        },
+        minPrice(price){
+            this.filters.price_min = price
+            this.fetchData();
+            // this.stockFiltered.items = this.STOCKS.items.filter(d => d.price >= price);
+        },
+        filterMarket(market){
+            this.filters.market = market;
+            this.fetchData();
+        },
+        filterCountry(country){
+            this.filters.country = country;
+            this.fetchData();
+        },
+        filterSymbol(symbol){
+            this.filters.symbol = symbol;
+            this.fetchData();
+        },
+        getFilters(){
+            let filters = {};
+            for(let filter in this.filters){
+                if(this.filters[filter]){
+                    filters[filter] = this.filters[filter]
+                }
+            }
+
+            return filters;
+        },
+        async fetchData(){
+
+            const filters = this.getFilters();
+
+            await this.FETCH_STOCK_DATA({
                 page: this.currentPage,
                 column: this.sortedColumn,
                 order: this.order,
-                per_page: this.perPage
-            }).then((response) => {
-                this.socks = response.stocks;
-                this.pagination = response.pagination;
+                per_page: this.perPage,
+                ...filters
             });
+
+            this.stockFiltered.items = [...this.STOCKS.items];
+            this.stockFiltered.pagination = {...this.STOCKS.pagination};
         },
         /**
          * Get the serial number.

@@ -11,6 +11,9 @@
                                     <slot name="breadcrumb-name"></slot>
                                 </div>
                             </div>
+                            <div class="filters">
+                                <slot name="filters"></slot>
+                            </div>
                             <!-- content page -->
                             <slot name="content"></slot>
                             <!-- end content page -->
