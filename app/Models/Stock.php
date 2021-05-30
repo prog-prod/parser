@@ -98,6 +98,22 @@ class Stock extends Model
     {
         return $this->hasOne(StockCompanyProfile::class, 'stock_id', 'id');
     }
+
+    public static function getAllWithFilter($data){
+
+        $stockFilter = auth()->user()->stockFilter;
+
+        $price_range = $stockFilter->getPricesRange($data['price_min'] ?? null, $data['price_max'] ?? null);
+
+
+        $stocks = Stock::priceRange($price_range)
+            ->orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
+
+        if(isset($data['market'])){
+            $stocks->where('market', $data['market']);
+        }
+        return $stocks->paginate($data['per_page'] ?? 20);
+    }
 }
 
 

@@ -1,4 +1,5 @@
 import httpClient from '../httpModule';
+import axios from "axios";
 
 const RESOURCE_NAME = 'stocks';
 
@@ -10,6 +11,6 @@ export default {
         return httpClient.get(`${RESOURCE_NAME}/${stock_id}`);
     },
     getMarketList(){
-        return httpClient.get(`stock/get-market-list`);
+        return httpClient.get(`/get-market-list`);
     }
 };

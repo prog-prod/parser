@@ -1,49 +1,40 @@
 <template>
     <div>
-        <div class="card">
-            <div class="card-header" data-bs-toggle="collapse" href="#collapseFilterMarket" role="button" aria-expanded="false" aria-controls="collapseFilterMarket">
-                <h6>Filter Market</h6>
-            </div>
-            <div class="collapse" id="collapseFilterMarket">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="d-flex me-3">
-                            <label for="filter-market" class="col-form-label me-1">Market</label>
-                            <select class="form-control" @change="filterMarket" v-model="market" id="filter-market">
-                                <option value="" v-for=""></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <h6>Filter Market</h6>
+        <div class="d-flex  me-3">
+            <v-select :options="marketList" class="market-select" @input="filterMarket"
+                      placeholder="Choose a market" :model.sync="market"></v-select>
         </div>
     </div>
 </template>
 
 <script>
     import StockService from '../../../../shared/services/stock.service';
-
     export default {
-        name: "FilterPrice",
-        data: function() {
+        name: "FilterMarket",
+        data: function () {
             return {
-                market:null,
+                market: null,
                 marketList: []
             }
         },
-        methods:{
-            filterMarket(){
-                this.$emit(`market`, this.market)
+        methods: {
+            filterMarket(val) {
+                this.$emit(`filter-market`, val)
             },
-            async fetchMarketList(){
+            async fetchMarketList() {
                 const res = await StockService.getMarketList();
-                console.log(res)
-                this.marketList = res.data
+                this.marketList = res.marketList
             }
         },
-        created() {
-            this.fetchMarketList();
+        async created() {
+            await this.fetchMarketList();
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    .market-select{
+        min-width: 160px;
+    }
+</style>

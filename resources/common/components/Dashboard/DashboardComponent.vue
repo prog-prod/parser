@@ -1,10 +1,11 @@
 <template>
     <main-component>
         <h4 slot="breadcrumb-name" class="mb-0">Dashboard</h4>
-        <template #filters>
-            <FilterPrice @max-price="maxPrice" @min-price="minPrice"/>
-            <FilterMarket/>
-        </template>
+        <filters-component slot="filters"
+                           @max-price="maxPrice"
+                           @min-price="minPrice"
+                           @filter-market="filterMarket"
+        />
         <div slot="content" class="dashboard">
             <div class="card">
                 <div class="card-body">
@@ -66,9 +67,10 @@
 import FilterPrice from "./Stock/components/FilterPrice";
 import FilterMarket from "./Stock/components/FilterMarket";
 import {mapActions, mapGetters} from "vuex";
+import FiltersComponent from "./Stock/components/FiltersComponent";
 
 export default {
-    components: {FilterPrice, FilterMarket},
+    components: {FiltersComponent, FilterPrice, FilterMarket},
     data() {
         return {
             filters:{
@@ -143,11 +145,15 @@ export default {
             this.fetchData();
             // this.stockFiltered.items = this.STOCKS.items.filter(d => d.price >= price);
         },
+        filterMarket(market){
+            this.filters.market = market;
+            this.fetchData();
+        },
         getFilters(){
             let filters = {};
             for(let filter in this.filters){
                 if(this.filters[filter]){
-                    filters = {...filters, price_min: this.filters[filter]}
+                    filters[filter] = this.filters[filter]
                 }
             }
 
