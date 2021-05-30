@@ -112,6 +112,10 @@ class Stock extends Model
         if(isset($data['market'])){
             $stocks->where('market', $data['market']);
         }
+        if(isset($data['country'])){
+            $stocks->where('country', $data['country']);
+        }
+
         return $stocks->paginate($data['per_page'] ?? 20);
     }
 }

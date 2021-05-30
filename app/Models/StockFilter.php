@@ -21,8 +21,8 @@ class StockFilter extends Model
 
     public function getPricesRange($min_price = null, $max_price = null){
         return [
-            !is_null($min_price) && (float)$min_price >= $this->min_price ? (float)$min_price : $this->min_price,
-            !is_null($max_price) && (float)$max_price <= $this->max_price ? (float)$max_price : $this->max_price,
+            !is_null($min_price) ? (float)$min_price : $this->min_price,
+            !is_null($max_price) ? (float)$max_price : $this->max_price,
         ];
     }
 }

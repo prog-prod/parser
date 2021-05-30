@@ -2,7 +2,7 @@
     <div>
         <h6>Filter Market</h6>
         <div class="d-flex  me-3">
-            <v-select :options="marketList" class="market-select" @input="filterMarket"
+            <v-select :options="marketList" class="filter-select" @input="filterMarket"
                       placeholder="Choose a market" :model.sync="market"></v-select>
         </div>
     </div>
@@ -33,8 +33,8 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .market-select{
+<style lang="scss">
+    .filter-select{
         min-width: 160px;
     }
 </style>

@@ -5,12 +5,11 @@
         </div>
         <div class="collapse" id="collapseFilters">
             <div class="card-body p-3">
-                <div class="row justify-content-between">
-                    <div class="col-sm-12 col-md-4"><FilterPrice @max-price="maxPrice" @min-price="minPrice"/></div>
-                    <div class="col-sm-12 col-md-4 "><FilterMarket @filter-market="filterMarket" class="mt-3"/></div>
+                <div class="d-flex justify-content-md-between">
+                    <div><FilterPrice @max-price="maxPrice" @min-price="minPrice"/></div>
+                    <div><FilterMarket @filter-market="filterMarket"/></div>
+                    <div><FilterCountry @filter-country="filterCountry"/></div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -19,17 +18,21 @@
 <script>
   import FilterPrice from "./FilterPrice";
   import FilterMarket from "./FilterMarket";
+  import FilterCountry from "./FilterCountry";
   export default {
     name: "FiltersComponent",
-      components: {FilterMarket, FilterPrice},
+      components: {FilterCountry, FilterMarket, FilterPrice},
       methods:{
           minPrice: function(value) { this.$emit('min-price', value) },
           maxPrice: function (value) { this.$emit('max-price', value) },
-          filterMarket: function(value) { this.$emit('filter-market', value) }
+          filterMarket: function(value) { this.$emit('filter-market', value) },
+          filterCountry: function(value) { this.$emit('filter-country', value) }
       }
   }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+    .filter-select{
+        min-width: 160px;
+    }
 </style>
