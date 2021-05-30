@@ -115,6 +115,9 @@ class Stock extends Model
         if(isset($data['country'])){
             $stocks->where('country', $data['country']);
         }
+        if(isset($data['symbol'])){
+            $stocks->where('symbol', 'like', '%'.trim($data['symbol']).'%');
+        }
 
         return $stocks->paginate($data['per_page'] ?? 20);
     }

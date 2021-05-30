@@ -6,6 +6,7 @@
                            @min-price="minPrice"
                            @filter-market="filterMarket"
                            @filter-country="filterCountry"
+                           @filter-symbol="filterSymbol"
         />
         <div slot="content" class="dashboard">
             <div class="card">
@@ -78,7 +79,8 @@ export default {
                 price_min: null,
                 price_max: null,
                 market: null,
-                country: null
+                country: null,
+                symbol: null
             },
             stockFiltered: {
                 items: [],
@@ -153,6 +155,10 @@ export default {
         },
         filterCountry(country){
             this.filters.country = country;
+            this.fetchData();
+        },
+        filterSymbol(symbol){
+            this.filters.symbol = symbol;
             this.fetchData();
         },
         getFilters(){

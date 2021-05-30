@@ -9,6 +9,7 @@
                     <div><FilterPrice @max-price="maxPrice" @min-price="minPrice"/></div>
                     <div><FilterMarket @filter-market="filterMarket"/></div>
                     <div><FilterCountry @filter-country="filterCountry"/></div>
+                    <div><FilterSymbol @filter-symbol="filterSymbol"/></div>
                 </div>
             </div>
         </div>
@@ -19,14 +20,16 @@
   import FilterPrice from "./FilterPrice";
   import FilterMarket from "./FilterMarket";
   import FilterCountry from "./FilterCountry";
+  import FilterSymbol from "./FilterSymbol";
   export default {
     name: "FiltersComponent",
-      components: {FilterCountry, FilterMarket, FilterPrice},
+      components: {FilterSymbol, FilterCountry, FilterMarket, FilterPrice},
       methods:{
           minPrice: function(value) { this.$emit('min-price', value) },
           maxPrice: function (value) { this.$emit('max-price', value) },
           filterMarket: function(value) { this.$emit('filter-market', value) },
-          filterCountry: function(value) { this.$emit('filter-country', value) }
+          filterCountry: function(value) { this.$emit('filter-country', value) },
+          filterSymbol: function(value) { this.$emit('filter-symbol', value) }
       }
   }
 </script>
