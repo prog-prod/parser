@@ -123,7 +123,7 @@ export default {
     },
     mounted() {
         this.user = this.$store.getters.user;
-        if (this.user.stock_filter !== null) {
+        if (this.user.stock_filter) {
             this.stock_filter = this.user.stock_filter;
         }
     },
