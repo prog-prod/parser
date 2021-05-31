@@ -16,7 +16,6 @@ class StockController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-
         $stocks = Stock::getAllWithFilter($request->all());
 
         return response()->json([
@@ -51,10 +50,9 @@ class StockController extends Controller
     */
     public function getMarketList(): JsonResponse
     {
-
         return response()->json([
             'result' => true,
-            'marketList' => collect(StockMarketTypeEnum::labels())->values()
+            'marketList' => StockMarketTypeEnum::toLabels()
         ], 200);
     }
 }
