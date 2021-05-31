@@ -18,6 +18,8 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "FilterPrice",
         data: function () {
@@ -28,10 +30,22 @@
                 },
             }
         },
+        computed:{
+            ...mapGetters(['user']),
+            stock_filter(){
+                return this.user.stock_filter;
+            }
+        },
         methods: {
             filterPrice(type) {
                 this.$emit(`${type}-price`, this.price[type])
             }
+        },
+        async mounted() {
+            await this.$store.dispatch('updateUserData');
+            this.price.min = this.stock_filter.min_price
+            this.price.max = this.stock_filter.max_price
+
         }
     }
 </script>

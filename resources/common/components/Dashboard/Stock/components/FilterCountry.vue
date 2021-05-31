@@ -3,7 +3,7 @@
         <h6>Filter Country</h6>
         <div class="d-flex  me-3">
         <v-select :options="countriesListArray" class="filter-select" @input="filterCountry"
-              placeholder="Choose a country" :model.sync="country"></v-select>
+              placeholder="Choose a country" :model.sync="country" multiple></v-select>
         </div>
     </div>
 </template>

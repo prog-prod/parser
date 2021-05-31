@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\UserInfoRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Lang;
 use App\Http\Resources\UserResource;
