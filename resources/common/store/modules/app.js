@@ -8,7 +8,8 @@ export default {
         status: '',
         user: {},
         access_token: localStorage.getItem(AUTH_KEY),
-        timerOptions: {}
+        timerOptions: {},
+        showRightSidebar: false,
     },
     getters: {
         user: (state) => {
@@ -19,6 +20,7 @@ export default {
         timerOptions: (state) => {
             return state.timerOptions;
         },
+        showRightSidebar: state => state.showRightSidebar
     },
     actions:
         {
@@ -70,6 +72,9 @@ export default {
             }
         },
     mutations: {
+        change_show_right_sidebar(state,val){
+            state.showRightSidebar = val
+        },
         auth_success(state, {user, token}){
             if (token) {
                 state.access_token = token;

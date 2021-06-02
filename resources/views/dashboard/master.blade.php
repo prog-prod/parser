@@ -25,7 +25,7 @@
 <body>
 
 <div id="app">
-    <div class="wrapper">
+    <div class="wrapper" :class="{'right-sidebar-visible': showRightSidebar}">
         <router-view></router-view>
     </div>
 </div>

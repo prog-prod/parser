@@ -9,6 +9,7 @@ window.Vue = Vue;
 
 import router from './routes';
 import store from './store/index';
+import {mapGetters} from "vuex";
 
 require('./bootstrap');
 require('./components');
@@ -16,5 +17,8 @@ require('./packages');
 
 const app = new Vue({
     store,
-    router
+    router,
+    computed:{
+        ...mapGetters(['showRightSidebar'])
+    }
 }).$mount('#app');
