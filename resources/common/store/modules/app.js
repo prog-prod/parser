@@ -10,6 +10,9 @@ export default {
         access_token: localStorage.getItem(AUTH_KEY),
         timerOptions: {},
         showRightSidebar: false,
+        showRightSidebarOnRoutes: [
+            'dashboard.stocks.show'
+        ]
     },
     getters: {
         user: (state) => {
@@ -20,7 +23,8 @@ export default {
         timerOptions: (state) => {
             return state.timerOptions;
         },
-        showRightSidebar: state => state.showRightSidebar
+        showRightSidebar: state => state.showRightSidebar,
+        showRightSidebarOnRoutes: state => state.showRightSidebarOnRoutes,
     },
     actions:
         {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header id="page-topbar">
+        <header id="page-topbar" class="page-topbar" :class="{'added-menu-right': isVisibleRightSidebar}">
             <div class="navbar-header">
                 <div class="d-flex">
                     <!-- LOGO -->
@@ -164,7 +164,7 @@
             </div>
         </header>
         <left-sidebar/>
-        <right-sidebar/>
+        <right-sidebar v-if="isVisibleRightSidebar"/>
     </div>
 </template>
 

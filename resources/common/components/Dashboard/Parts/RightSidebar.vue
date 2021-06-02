@@ -1,7 +1,7 @@
 <template>
     <div class="vertical-menu-block">
         <button @click="collapseRightSidebar" type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
-            <i class="fa fa-fw fa-bars"></i>
+            <history-icon/>
         </button>
 
 
@@ -52,9 +52,11 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import HistoryIcon from "../../common/icons/HistoryIcon";
 
     export default {
         name: "RightSidebar",
+        components: {HistoryIcon},
         computed:{
           ...mapGetters(['showRightSidebar'])
         },
@@ -67,7 +69,7 @@
 </script>
 
 <style>
-    #page-topbar{
+    #page-topbar.added-menu-right{
         right: 70px;
     }
     .vertical-menu-block{
