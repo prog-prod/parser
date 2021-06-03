@@ -38,9 +38,14 @@
 </script>
 
 <style lang="scss">
-    .right-sidebar-visible{
-        .main-content{
-            margin-right:250px !important
+    #app {
+        .updated-column{
+            color:orange;
+        }
+        .right-sidebar-visible {
+            .main-content {
+                margin-right: 250px !important
+            }
         }
     }
 </style>

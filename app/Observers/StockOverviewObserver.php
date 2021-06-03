@@ -30,6 +30,7 @@ class StockOverviewObserver
         $diff = $stockOverview->makeHidden('id', 'updated_at', 'created_at');
 
         $originalDiff = $diff->getRawOriginal();
+        $originalDiff['stock_overview_id'] = $originalDiff['id'];
         unset($originalDiff['id']);
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);

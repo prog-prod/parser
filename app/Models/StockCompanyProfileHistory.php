@@ -2,21 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockCompanyProfile extends Model
+class StockCompanyProfileHistory extends Model
 {
     use HasFactory;
-    use StockHistoryTrait;
-
-    protected $table = 'stock_company_profiles';
+    public $timestamps = true;
 
     protected $fillable = [
         'stock_id',
-
-        /** JSON */
         'auditors',
         'indexStatuses',
         'investmentBanks',
@@ -29,10 +24,7 @@ class StockCompanyProfile extends Model
         'premierDirectorList',
         'standardDirectorList',
         'securities',
-
-        /** string */
         'symbol',
-
         'address1',
         'address2',
         'auditStatus',
@@ -69,8 +61,6 @@ class StockCompanyProfile extends Model
         'yearOfIncorporation',
         'zip',
         'businessDesc',
-
-        /** boolean */
         'audited',
         'blankCheck',
         'blindPool',
@@ -91,8 +81,6 @@ class StockCompanyProfile extends Model
         'isUnsolicited',
         'spac',
         'unableToContact',
-
-        /** Timestamp's */
         'deregistrationDate',
         'estimatedMarketCapAsOfDate',
         'latestFilingDate',
@@ -100,14 +88,12 @@ class StockCompanyProfile extends Model
         'tierStartDate',
         'restrictedSharesAsOfDate',
         'unrestrictedSharesAsOfDate',
-
-        /** numerics */
         'estimatedMarketCap',
         'numberOfEmployees',
         'numberOfEmployeesAsOf',
         'numberOfRecordShareholders',
         'restrictedShares',
-        'unrestrictedShares'
+        'unrestrictedShares',
     ];
 
     protected $casts = [
@@ -124,31 +110,5 @@ class StockCompanyProfile extends Model
         'premierDirectorList' => 'array',
         'standardDirectorList' => 'array',
         'securities' => 'array',
-        'corporateBrokers' => 'array',
     ];
-    public function history()
-    {
-        return $this->hasMany(StockCompanyProfileHistory::class,'stock_company_profile_id','id');
-    }
-    public function stock()
-    {
-        return $this->belongsTo(Stock::class);
-    }
-
-    public function getDiffColumns(){
-        $current = $this->toArray();
-        unset($current['id'],$current['created_at'],$current['updated_at']);
-        $history = $this->history->last()
-            ?  $this->history->last()->toArray()
-            : [];
-
-        if(!$history) return [];
-
-        $a = $this->casts_array($current);
-        $b = $this->casts_array($history);
-        $current = $this->to_single_array($a);
-        $history = $this->to_single_array($b);
-
-        return array_diff($current, $history);
-    }
 }

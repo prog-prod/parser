@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StockOverviewResource extends JsonResource
+class StockOverviewHistoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -56,8 +56,7 @@ class StockOverviewResource extends JsonResource
             "showRealtimeAd" => $this->showRealtimeAd,
             "marketCap" => number_format($this->marketCap, 0, '', ','),
             "sharesOutstanding" => number_format($this->sharesOutstanding, 0, '', ','),
-            "adr" => $this->adr,
-            "history" => StockOverviewHistoryResource::collection($this->history)
+            "adr" => $this->adr
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Enums\StockMarketTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StockOverviewResource;
 use App\Http\Resources\StockResource;
+use App\Http\Resources\StocksHistoryResource;
 use App\Models\Stock;
 use App\Models\StockOverview;
 use Illuminate\Http\JsonResponse;
@@ -51,10 +52,25 @@ class StockController extends Controller
     */
     public function getMarketList(): JsonResponse
     {
-
         return response()->json([
             'result' => true,
             'marketList' => collect(StockMarketTypeEnum::labels())->values()
         ], 200);
+    }
+
+    public function getStockHistory(Stock $stock): JsonResponse
+    {
+        return response()->json([
+            'result' => true,
+            'history' => StocksHistoryResource::collection($stock->history)
+        ]);
+    }
+
+    public function getUpdatedColumns(Stock $stock): JsonResponse
+    {
+        return response()->json([
+            'result' => true,
+            'columns' => $stock->getUpdatedColumns()
+        ]);
     }
 }

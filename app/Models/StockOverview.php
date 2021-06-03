@@ -57,6 +57,17 @@ class StockOverview extends Model
 
     public function history()
     {
-        return $this->hasMany(StockOverviewHistory::class);
+        return $this->hasMany(StockOverviewHistory::class,'stock_overview_id','id');
+    }
+
+    public function getDiffColumns(){
+        $stock_overview = $this->toArray();
+        unset($stock_overview['id'],$stock_overview['created_at'],$stock_overview['updated_at']);
+        $history = $this->history->last()
+            ?  $this->history->last()->toArray()
+            : [];
+        if(!$history) return [];
+
+        return array_diff($stock_overview, $history);
     }
 }

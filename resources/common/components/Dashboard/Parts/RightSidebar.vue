@@ -23,12 +23,13 @@
                                     <ul class="metismenu list-unstyled mm-show" id="side-menu">
                                         <li class="menu-title">Stock History</li>
 
-                                        <li class="mm-active">
-                                            <router-link  class="dropdown-item" :to="{name: 'dashboard.stocks.show', params: {id: 2}}">
-                                                • <span>{{ '12.23.2456' }}</span>
+                                        <li class="mmm-active" v-for="stock in history">
+                                            <router-link  class="dropdown-item" :to="{name: 'dashboard.stocks.show', params: {id: stock.stock_id}}">
+                                                • <span>{{ stock.created_at }}</span>
                                             </router-link>
                                         </li>
                                     </ul>
+                                    <div class="text-center text-muted" v-if="history.length === 0"><span>History is empty</span></div>
                                 </div>
                                 <!-- Sidebar -->
                             </div>
@@ -53,18 +54,33 @@
 <script>
     import {mapGetters} from "vuex";
     import HistoryIcon from "../../common/icons/HistoryIcon";
+    import StockService from "../../../shared/services/stock.service";
 
     export default {
         name: "RightSidebar",
         components: {HistoryIcon},
+        data:() => ({
+           history: []
+        }),
         computed:{
-          ...mapGetters(['showRightSidebar'])
+          ...mapGetters(['showRightSidebar', 'stockIdHistory'])
         },
         methods:{
             collapseRightSidebar(){
                 this.$store.commit('change_show_right_sidebar', !this.showRightSidebar)
+            },
+            async getStockHistory(stock_id){
+                const h = await StockService.getHistory(stock_id);
+                this.history = h.history;
             }
+        },
+        async created() {
+            if(this.stockIdHistory){
+                await this.getStockHistory(this.stockIdHistory);
+            }
+
         }
+
     }
 </script>
 

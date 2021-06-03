@@ -22,5 +22,6 @@ Route::get('/', function() {
 Route::any('tg/updates', WebhookController::class);
 
 Route::get('{path}', function() {
+//    dd(\App\Models\Stock::find(1)->getUpdatedColumns());
     return view('dashboard.master');
 })->where('path', '.*')->name('vue-route');

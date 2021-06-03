@@ -21,7 +21,8 @@ export default {
             stock: {}
         }
     },
-    created() {
+    async created() {
+        await this.$store.dispatch('GET_STOCK_UPDATED_COLUMNS',{ stock_id: this.$route.params.id })
         return this.loadStock()
     },
     methods: {
@@ -31,6 +32,9 @@ export default {
             })
         },
 
+    },
+    mounted() {
+        this.$store.commit('SET_STOCK_ID_HISTORY',this.$route.params.id)
     }
 }
 </script>

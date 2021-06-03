@@ -2,7 +2,7 @@
     <div class="tab-pane" id="security-details" role="tabpanel">
         <div class="row">
             <div class="col-lg-12">
-                <h2>{{ stock.symbol }} Security Details</h2>
+                <h2>{{ symbol }} Security Details</h2>
                 <hr>
                 <h3>Share Structure</h3>
                 <hr>
@@ -10,17 +10,15 @@
                     <div>
                         <div class="d-flex">
                             <span class="w-100">Market Cap</span>
-                            <span v-if="stock.overview" class="w-100">{{ stock.overview.marketCap }}</span>
+                            <span v-if="stock.overview" class="w-100" v-html="marketCap"></span>
                             <span v-else class="w-100">Not Available</span>
 
-                            <span v-if="stock.companyProfile && stock.overview && stock.companyProfile.estimatedMarketCapAsOfDate" class="w-100">
-                                                    {{ dateConvert(stock.companyProfile.estimatedMarketCapAsOfDate) }}
-                                                </span>
+                            <span v-if="stock.companyProfile && stock.overview && stock.companyProfile.estimatedMarketCapAsOfDate" class="w-100" v-html="estimatedMarketCapAsOfDate"></span>
                             <span v-else class="w-100">Not Available</span>
                         </div>
                     </div>
                     <div v-if="stock.companyProfile && stock.companyProfile.securities">
-                        <div v-for="security in stock.companyProfile.securities">
+                        <div v-for="security in securities">
                             <div v-if="security.authorizedShares" class="d-flex">
                                 <span class="w-100">Authorized Shares</span>
                                 <span class="w-100">{{ numberFormat(security.authorizedShares) }}</span>
@@ -150,6 +148,23 @@
   export default {
     name: "SecurityDetailsTab",
       props:['stock'],
+    computed:{
+      symbol(){
+        return this.listen('symbol',this.stock.symbol)
+      },
+      marketCap(){
+        if(!this.stock.overview) return null;
+        return this.listen('overview.marketCap', this.stock.overview.marketCap);
+      },
+      estimatedMarketCapAsOfDate(){
+        if(!this.stock.companyProfile) return null;
+        return this.listen('companyProfile.estimatedMarketCapAsOfDate', this.dateConvert(this.stock.companyProfile.estimatedMarketCapAsOfDate));
+      },
+      securities(){
+        if(!this.stock.companyProfile) return null;
+        return this.listen('companyProfile.securities', this.stock.companyProfile.securities, true);
+      },
+    },
       methods: {
           dateConvert: function(unixTime)
           {

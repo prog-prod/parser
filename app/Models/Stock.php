@@ -91,7 +91,7 @@ class Stock extends Model
 
     public function corporateActions()
     {
-        return $this->hasMany(StockCorporateAction::class);
+        return $this->hasMany(StockCorporateAction::class, 'stock_id', 'id');
     }
 
     public function companyProfile()
@@ -120,6 +120,59 @@ class Stock extends Model
         }
 
         return $stocks->paginate($data['per_page'] ?? 20);
+    }
+
+//    public function isUpdated(){
+//        return $this->updatedStocks()
+//            ? $this->updated_at >  $this->history()->latest()->updated_at
+//            : false;
+//    }
+    private function getDiffColumns(){
+
+        $stock_data = $this->makeHidden(['id', 'created_at', 'updated_at'])->getRawOriginal();
+        unset($stock_data['id'],$stock_data['created_at'],$stock_data['updated_at']);
+        $stock_history = $this->history->last() ? $this->history->last()->toArray() : null;
+
+        if(!$stock_history) return [];
+
+        return array_diff($stock_data, $stock_history);
+    }
+    public function getUpdatedColumns()
+    {
+
+       $stock_diff = $this->getDiffColumns();
+       $stock_overview_diff = $this->addPrefixToKeys($this->overview->getDiffColumns(),'overview');
+       $stock_company_profile_diff = $this->addPrefixToKeys($this->companyProfile->getDiffColumns(),'companyProfile');
+
+       $stock_news = $this->news->last();
+       $stock_news_diff =  $this->news
+           ? $this->addPrefixToKeys($stock_news->getDiffColumns(),'news')
+           : [];
+
+       $corporateActions = $this->corporateActions->last();
+
+       $stock_corporate_action_diff = $corporateActions
+           ? $this->addPrefixToKeys($corporateActions->getDiffColumns(), 'corporateActions')
+           : [];
+
+
+        return array_merge(
+            $stock_diff,
+            $stock_overview_diff,
+//            $stock_company_profile_diff,
+            $stock_corporate_action_diff,
+            $stock_news_diff
+        );
+
+    }
+
+    private function addPrefixToKeys($array,$prefix,$glue = '.')
+    {
+        $array_result = [];
+        foreach($array as $key => $value){
+            $array_result[$prefix.$glue.$key] = $value;
+        }
+        return $array_result;
     }
 }
 
