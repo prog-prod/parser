@@ -23,13 +23,13 @@
                                     <ul class="metismenu list-unstyled mm-show" id="side-menu">
                                         <li class="menu-title">Stock History</li>
 
-                                        <li class="mmm-active" v-for="stock in history">
-                                            <router-link  class="dropdown-item" :to="{name: 'dashboard.stocks.show', params: {id: stock.stock_id}}">
-                                                • <span>{{ stock.created_at }}</span>
-                                            </router-link>
+                                        <li :class="{'mm-active': STOCK_HISTORY_ID === history.id}" class="cursor-pointer" v-for="history in histories">
+                                            <a @click.prevent="showHistory(history.id)"  class="dropdown-item" >
+                                                • <span>{{ history.created_at }}</span>
+                                            </a>
                                         </li>
                                     </ul>
-                                    <div class="text-center text-muted" v-if="history.length === 0"><span>History is empty</span></div>
+                                    <div class="text-center text-muted" v-if="histories.length === 0"><span>History is empty</span></div>
                                 </div>
                                 <!-- Sidebar -->
                             </div>
@@ -60,18 +60,22 @@
         name: "RightSidebar",
         components: {HistoryIcon},
         data:() => ({
-           history: []
+            histories: []
         }),
         computed:{
-          ...mapGetters(['showRightSidebar', 'stockIdHistory'])
+          ...mapGetters(['showRightSidebar', 'stockIdHistory', 'STOCK_HISTORY_ID'])
         },
         methods:{
+            async showHistory(history_id){
+                await this.$store.commit('SET_STOCK_HISTORY_ID',history_id);
+                console.log(this.STOCK_HISTORY_ID)
+            },
             collapseRightSidebar(){
                 this.$store.commit('change_show_right_sidebar', !this.showRightSidebar)
             },
             async getStockHistory(stock_id){
                 const h = await StockService.getHistory(stock_id);
-                this.history = h.history;
+                this.histories = h.history;
             }
         },
         async created() {
@@ -85,6 +89,9 @@
 </script>
 
 <style>
+    .cursor-pointer{
+        cursor: pointer;
+    }
     #page-topbar.added-menu-right{
         right: 70px;
     }
