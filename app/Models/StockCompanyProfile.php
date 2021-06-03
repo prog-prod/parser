@@ -124,7 +124,6 @@ class StockCompanyProfile extends Model
         'premierDirectorList' => 'array',
         'standardDirectorList' => 'array',
         'securities' => 'array',
-        'corporateBrokers' => 'array',
     ];
     public function history()
     {

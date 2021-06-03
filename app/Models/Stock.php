@@ -141,11 +141,15 @@ class Stock extends Model
     {
 
        $stock_diff = $this->getDiffColumns();
-       $stock_overview_diff = $this->addPrefixToKeys($this->overview->getDiffColumns(),'overview');
-       $stock_company_profile_diff = $this->addPrefixToKeys($this->companyProfile->getDiffColumns(),'companyProfile');
+       $stock_overview_diff = $this->overview
+           ? $this->addPrefixToKeys($this->overview->getDiffColumns(),'overview')
+           : [];
+       $stock_company_profile_diff = $this->companyProfile
+           ? $this->addPrefixToKeys($this->companyProfile->getDiffColumns(),'companyProfile')
+           : [];
 
        $stock_news = $this->news->last();
-       $stock_news_diff =  $this->news
+       $stock_news_diff =  $stock_news
            ? $this->addPrefixToKeys($stock_news->getDiffColumns(),'news')
            : [];
 
@@ -159,11 +163,10 @@ class Stock extends Model
         return array_merge(
             $stock_diff,
             $stock_overview_diff,
-//            $stock_company_profile_diff,
+            $stock_company_profile_diff,
             $stock_corporate_action_diff,
             $stock_news_diff
         );
-
     }
 
     private function addPrefixToKeys($array,$prefix,$glue = '.')

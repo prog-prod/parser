@@ -18,11 +18,11 @@
                         </div>
                     </div>
                     <div v-if="stock.companyProfile && stock.companyProfile.securities">
-                        <div v-for="security in securities">
+                        <div v-for="(security,index) in stock.companyProfile.securities" :key="index">
                             <div v-if="security.authorizedShares" class="d-flex">
                                 <span class="w-100">Authorized Shares</span>
-                                <span class="w-100">{{ numberFormat(security.authorizedShares) }}</span>
-                                <span class="w-100">{{ dateConvert(security.authorizedSharesAsOfDate) }}</span>
+                                <span class="w-100" v-html="security_authorizedShares(security,index)"></span>
+                                <span class="w-100" v-html="security_authorizedSharesAsOfDate(security,index)"></span>
                             </div>
                             <div v-else class="d-flex">
                                 <span class="w-100">Authorized Shares</span>
@@ -31,18 +31,18 @@
                             </div>
                             <div v-if="security.outstandingShares" class="d-flex">
                                 <span class="w-100">Outstanding Shares</span>
-                                <span class="w-100">{{ numberFormat(security.outstandingShares) }}</span>
-                                <span class="w-100">{{ dateConvert(security.outstandingSharesAsOfDate) }}</span>
+                                <span class="w-100" v-html="security_outstandingShares(security, index)"></span>
+                                <span class="w-100" v-html="security_outstandingSharesAsOfDate(security,index)"></span>
                             </div>
                             <div v-if="security.outstandingShares" class="d-flex">
                                                     <span class="w-100 helper">
                                                         <span>Restricted</span>
                                                     </span>
 
-                                <span v-if="security.restrictedShares" class="w-100 helper">{{ numberFormat(security.restrictedShares) }}</span>
+                                <span v-if="security.restrictedShares" class="w-100 helper" v-html="security_restrictedShares(security, index)"></span>
                                 <span v-else class="w-100 helper">Not Available</span>
 
-                                <span v-if="security.restrictedSharesAsOfDate" class="w-100 helper">{{ dateConvert(security.restrictedSharesAsOfDate) }}</span>
+                                <span v-if="security.restrictedSharesAsOfDate" class="w-100 helper" v-html="security_restrictedSharesAsOfDate(security,index)"></span>
                                 <span v-else class="w-100"></span>
                             </div>
                             <div v-if="security.outstandingShares" class="d-flex">
@@ -50,21 +50,21 @@
                                                         <span>Unrestricted</span>
                                                     </span>
 
-                                <span v-if="security.unrestrictedShares" class="w-100 helper">{{ numberFormat(security.unrestrictedShares) }}</span>
+                                <span v-if="security.unrestrictedShares" class="w-100 helper" v-html="security_unrestrictedShares(security, index)">{{ numberFormat(security.unrestrictedShares) }}</span>
                                 <span v-else class="w-100 helper">Not Available</span>
 
-                                <span v-if="security.unrestrictedSharesAsOfDate" class="w-100 helper">{{ dateConvert(security.unrestrictedSharesAsOfDate) }}</span>
+                                <span v-if="security.unrestrictedSharesAsOfDate" class="w-100 helper" v-html="security_unrestrictedSharesAsOfDate(security,index)"></span>
                                 <span v-else class="w-100"></span>
                             </div>
                             <div v-if="security.dtcShares" class="d-flex">
                                 <span class="w-100">Held at DTC</span>
-                                <span class="w-100">{{ numberFormat(security.dtcShares) }}</span>
-                                <span class="w-100">{{ dateConvert(security.dtcSharesAsOfDate) }}</span>
+                                <span class="w-100" v-html="security_dtcShares(security,index)"></span>
+                                <span class="w-100" v-html="security_dtcSharesAsOfDate(security,index)"></span>
                             </div>
                             <div v-if="security.publicFloat" class="d-flex">
                                 <span class="w-100">Float</span>
-                                <span class="w-100">{{ numberFormat(security.publicFloat) }}</span>
-                                <span class="w-100">{{ dateConvert(security.publicFloatAsOfDate) }}</span>
+                                <span class="w-100" v-html="security_publicFloat(security,index)(security, index)"></span>
+                                <span class="w-100" v-html="security_publicFloatAsOfDate(security, index)"></span>
                             </div>
                             <div v-if="security.parValue" class="d-flex">
                                 <span class="w-100">Par Value</span>
@@ -79,10 +79,10 @@
                         <hr>
                         <div v-if="stock.companyProfile">
                             <div v-if="stock.companyProfile.securities">
-                                <div v-for="security in stock.companyProfile.securities">
+                                <div v-for="(security, security_index) in stock.companyProfile.securities">
                                     <div v-if="security.transferAgents">
-                                        <div v-for="transfer in security.transferAgents">
-                                            <a :href="'https://www.otcmarkets.com/learn/service-providers/' +  transfer.id + '?t=6'" target="_blank">{{ transfer.name }}</a>
+                                        <div v-for="(transfer,transfer_index) in security.transferAgents">
+                                            <a :href="'https://www.otcmarkets.com/learn/service-providers/' +  transfer.id + '?t=6'" :class="{'column-updated': security_transferAgents_id(transfer,security_index,transfer_index)}" target="_blank" v-html="security_transferAgents_name(transfer, security_index, transfer_index)"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -100,11 +100,9 @@
                             <div v-if="stock.companyProfile.numberOfRecordShareholders">
                                 <div class="d-flex">
                                     <div>
-                                        <strong>Shareholders of Record</strong> <span>{{ stock.companyProfile.numberOfRecordShareholders }}</span>
+                                        <strong>Shareholders of Record</strong> <span v-html="numberOfRecordShareholders"></span>
                                     </div>
-                                    <div>
-                                        {{ dateConvert(stock.companyProfile.numberOfRecordShareholdersDate) }}
-                                    </div>
+                                    <div v-html="numberOfRecordShareholdersDate"></div>
                                 </div>
                             </div>
                             <div v-else>
@@ -126,11 +124,11 @@
                     </tr>
                     </thead>
                     <tbody v-if="stock.corporateActions && stock.corporateActions.length > 0">
-                    <tr v-for="action in stock.corporateActions">
-                        <td>{{ action.actionType }}</td>
-                        <td>{{ stock.symbol }}</td>
-                        <td>{{ dateConvert(action.changeDate) }}</td>
-                        <td>{{ action.comments }}</td>
+                    <tr v-for="(action, index) in stock.corporateActions">
+                        <td v-html="action_actionType(action, index)"></td>
+                        <td v-html="action_symbol(action,index)"></td>
+                        <td v-html="action_changeDate(action,index)"></td>
+                        <td v-html="action_comments(action,index)"></td>
                     </tr>
                     </tbody>
                     <tbody v-else>
@@ -160,12 +158,97 @@
         if(!this.stock.companyProfile) return null;
         return this.listen('companyProfile.estimatedMarketCapAsOfDate', this.dateConvert(this.stock.companyProfile.estimatedMarketCapAsOfDate));
       },
-      securities(){
+      // securities(){
+      //   if(!this.stock.companyProfile) return null;
+      //   return this.listen('companyProfile.securities', this.stock.companyProfile.securities, true);
+      // },
+      numberOfRecordShareholders(){
         if(!this.stock.companyProfile) return null;
-        return this.listen('companyProfile.securities', this.stock.companyProfile.securities, true);
+        return this.listen('companyProfile.numberOfRecordShareholders', this.stock.companyProfile.numberOfRecordShareholders, true);
+      },
+      numberOfRecordShareholdersDate(){
+        if(!this.stock.companyProfile) return null;
+        return this.listen('companyProfile.numberOfRecordShareholdersDate', this.dateConvert(this.stock.companyProfile.numberOfRecordShareholdersDate), true);
       },
     },
       methods: {
+          security_authorizedShares(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.authorizedShares`, this.numberFormat(security.authorizedShares));
+          },
+          security_authorizedSharesAsOfDate(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.authorizedSharesAsOfDate`, this.dateConvert(security.authorizedSharesAsOfDate));
+          },
+          security_outstandingShares(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.outstandingShares`, this.numberFormat(security.outstandingShares));
+          },
+          security_outstandingSharesAsOfDate(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.outstandingSharesAsOfDate`, this.dateConvert(security.outstandingSharesAsOfDate));
+          },
+          security_restrictedShares(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.restrictedShares`, this.numberFormat(security.restrictedShares));
+          },
+          security_restrictedSharesAsOfDate(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.restrictedSharesAsOfDate`, this.dateConvert(security.restrictedSharesAsOfDate));
+          },
+          security_unrestrictedShares(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.unrestrictedShares`, this.numberFormat(security.unrestrictedShares));
+          },
+          security_unrestrictedSharesAsOfDate(security,index)
+          {
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.unrestrictedSharesAsOfDate`, this.dateConvert(security.unrestrictedSharesAsOfDate));
+          },
+          security_dtcShares(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.dtcShares`, this.numberFormat(security.dtcShares));
+          },
+          security_dtcSharesAsOfDate(security,index) {
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.dtcSharesAsOfDate`, this.dateConvert(security.dtcSharesAsOfDate));
+          },
+          security_publicFloat(security,index){
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.publicFloat`, this.numberFormat(security.publicFloat));
+          },
+          security_publicFloatAsOfDate(security,index) {
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.publicFloatAsOfDate`, this.dateConvert(security.publicFloatAsOfDate));
+          },
+          security_parValue(security,index) {
+              if(!security) return null;
+              return this.listen(`companyProfile.securities.${index}.parValue`, security.parValue);
+          },
+          security_transferAgents_id(transfer,security_index,transfer_index){
+              if(!transfer) return null;
+              return this.listen(`companyProfile.securities.${security_index}.transferAgents.${transfer_index}.id`, transfer.id, true);
+          },
+          security_transferAgents_name(transfer,security_index,transfer_index){
+              if(!transfer) return null;
+              return this.listen(`companyProfile.securities.${security_index}.transferAgents.${transfer_index}.name`, transfer.name);
+          },
+          action_actionType(action,index){
+              if(!action) return null;
+              return this.listen(`companyProfile.corporateActions.${index}.actionType`, action.actionType);
+          },
+          action_symbol(action,index){
+              if(!action) return null;
+              return this.listen(`companyProfile.corporateActions.${index}.symbol`, action.symbol);
+          },
+          action_changeDate(action,index){
+              if(!action) return null;
+              return this.listen(`companyProfile.corporateActions.${index}.changeDate`, this.dateConvert(action.changeDate));
+          },
+          action_comments(action,index){
+              if(!action) return null;
+              return this.listen(`companyProfile.corporateActions.${index}.comments`, action.comments);
+          },
           dateConvert: function(unixTime)
           {
               unixTime = (unixTime - (unixTime % 1000)) / 1000;

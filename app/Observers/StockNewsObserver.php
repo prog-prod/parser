@@ -8,6 +8,7 @@ use App\Jobs\Parser\StockCorporateParseJob;
 use App\Jobs\Parser\StockNewsParseJob;
 use App\Jobs\Parser\StockOverviewParseJob;
 use App\Models\StockCompanyProfile;
+use App\Models\StockNews;
 
 class StockNewsObserver
 {
@@ -16,11 +17,11 @@ class StockNewsObserver
     /**
      * Handle the Stock "created" event.
      *
-     * @param StockNewsObserver $stock
+     * @param StockNews $stock
      * @return void
      */
 
-    public function updating(StockNewsObserver $stock)
+    public function updating(StockNews $stock)
     {
         // create history row of stock
         $diff = $stock->makeHidden('id', 'updated_at', 'created_at');
