@@ -8,7 +8,7 @@
                 </div>
                 <div class="w-100">
                     <ul>
-                        <li v-if="stock.companyProfile && stock.companyProfile.isProfileVerified">
+                        <li v-if="STOCK.companyProfile && STOCK.companyProfile.isProfileVerified">
                             <img src="/assets/images/verified-profile.png" alt="Verified Profile Icon">
                             <span>Verified Profile ({{ profileVerifiedAsOfDate }})</span>
                         </li>
@@ -19,7 +19,7 @@
                     <hr>
                     <div>
                         <h3>Indexes</h3>
-                        <div v-if="stock.companyProfile && stock.companyProfile.indexStatuses && stock.companyProfile.indexStatuses.length > 0">
+                        <div v-if="STOCK.companyProfile && STOCK.companyProfile.indexStatuses && STOCK.companyProfile.indexStatuses.length > 0">
                             <div v-for="index in indexStatuses" class="index" :class="{'column-updated':listen('companyProfile.indexStatuses')}">
                                 {{ index.indexSymbol }} - {{ index.indexName }} <span>Index</span>
                             </div>
@@ -39,20 +39,19 @@
 
   export default {
     name: "DetailsCard",
-      props:['stock'],
       computed:{
-        ...mapGetters(['STOCK_UPDATED_COLUMNS']),
+        ...mapGetters(['STOCK_UPDATED_COLUMNS','STOCK']),
           symbol(){
-              return this.listen('symbol',this.stock.symbol)
+              return this.listen('symbol',this.STOCK.symbol)
           },
           securityName(){
-            return this.listen('securityName',this.stock.securityName);
+            return this.listen('securityName',this.STOCK.securityName);
           },
           profileVerifiedAsOfDate(){
-              return this.listen('companyProfile.profileVerifiedAsOfDate', this.stock.companyProfile.profileVerifiedAsOfDate)
+              return this.listen('companyProfile.profileVerifiedAsOfDate', this.STOCK.companyProfile.profileVerifiedAsOfDate)
           },
           indexStatuses(){
-              return this.listen('companyProfile.indexStatuses',this.stock.companyProfile.indexStatuses)
+              return this.listen('companyProfile.indexStatuses',this.STOCK.companyProfile.indexStatuses)
           }
       },
       async beforeCreate() {

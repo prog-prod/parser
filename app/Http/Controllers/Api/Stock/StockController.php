@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\Stock;
 
 use App\Enums\StockMarketTypeEnum;
+use App\Events\HistoryUpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StockOverviewResource;
 use App\Http\Resources\StockResource;
 use App\Http\Resources\StocksHistoryResource;
+use App\Models\HistoryUpdate;
 use App\Models\Stock;
 use App\Models\StockOverview;
+use App\Models\StocksHistory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -62,7 +65,7 @@ class StockController extends Controller
     {
         return response()->json([
             'result' => true,
-            'history' => StocksHistoryResource::collection($stock->history)
+            'history' => $stock->getUpdates()
         ]);
     }
 
@@ -71,6 +74,16 @@ class StockController extends Controller
         return response()->json([
             'result' => true,
             'columns' => $stock->getUpdatedColumns()
+        ]);
+    }
+
+    public function getHistory(Request $request): JsonResponse
+    {
+        $data = Stock::find($request->stock_id)->getStockFromHistory($request->except('stock_id'));
+
+        return response()->json([
+            'result' => true,
+            'stock' => $data
         ]);
     }
 }

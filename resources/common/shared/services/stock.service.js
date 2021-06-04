@@ -13,8 +13,11 @@ export default {
     getMarketList(){
         return httpClient.get(`/get-market-list`);
     },
-    getHistory(stock_id){
-        return httpClient.get(`/stock/get-stock-history/${stock_id}`)
+    getHistoryDates(stock_id){
+        return httpClient.get(`/stock/get-history-updates/${stock_id}`)
+    },
+    getHistory(params){
+        return httpClient.post(`/stock/get-stock-history`, params)
     },
     getUpdatedColumns(stock_id){
         return httpClient.get(`/stock/get-updated-columns/${stock_id}`)

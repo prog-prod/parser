@@ -32,7 +32,8 @@ class StockResource extends JsonResource
             'history' => StocksHistoryResource::collection($this->history),
             'companyProfile' => new StockCompanyProfileResource($this->companyProfile),
 //            'news' => StockNewsResource::collection($this->news),
-            'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions)
+            'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions),
+            'created_at' => $this->created_at->format('d.m.Y H:i:s')
         ];
     }
 }

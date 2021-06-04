@@ -10,15 +10,15 @@
                     <div>
                         <div class="d-flex">
                             <span class="w-100">Market Cap</span>
-                            <span v-if="stock.overview" class="w-100" v-html="marketCap"></span>
+                            <span v-if="STOCK.overview" class="w-100" v-html="marketCap"></span>
                             <span v-else class="w-100">Not Available</span>
 
-                            <span v-if="stock.companyProfile && stock.overview && stock.companyProfile.estimatedMarketCapAsOfDate" class="w-100" v-html="estimatedMarketCapAsOfDate"></span>
+                            <span v-if="STOCK.companyProfile && STOCK.overview && STOCK.companyProfile.estimatedMarketCapAsOfDate" class="w-100" v-html="estimatedMarketCapAsOfDate"></span>
                             <span v-else class="w-100">Not Available</span>
                         </div>
                     </div>
-                    <div v-if="stock.companyProfile && stock.companyProfile.securities">
-                        <div v-for="(security,index) in stock.companyProfile.securities" :key="index">
+                    <div v-if="STOCK.companyProfile && STOCK.companyProfile.securities">
+                        <div v-for="(security,index) in STOCK.companyProfile.securities" :key="index">
                             <div v-if="security.authorizedShares" class="d-flex">
                                 <span class="w-100">Authorized Shares</span>
                                 <span class="w-100" v-html="security_authorizedShares(security,index)"></span>
@@ -77,9 +77,9 @@
                     <div class="col-lg-6">
                         <h3 class="mt-4">Transfer Agent</h3>
                         <hr>
-                        <div v-if="stock.companyProfile">
-                            <div v-if="stock.companyProfile.securities">
-                                <div v-for="(security, security_index) in stock.companyProfile.securities">
+                        <div v-if="STOCK.companyProfile">
+                            <div v-if="STOCK.companyProfile.securities">
+                                <div v-for="(security, security_index) in STOCK.companyProfile.securities">
                                     <div v-if="security.transferAgents">
                                         <div v-for="(transfer,transfer_index) in security.transferAgents">
                                             <a :href="'https://www.otcmarkets.com/learn/service-providers/' +  transfer.id + '?t=6'" :class="{'column-updated': security_transferAgents_id(transfer,security_index,transfer_index)}" target="_blank" v-html="security_transferAgents_name(transfer, security_index, transfer_index)"></a>
@@ -96,8 +96,8 @@
                     <div class="col-lg-6">
                         <h3 class="mt-4">Shareholders</h3>
                         <hr>
-                        <div v-if="stock.companyProfile">
-                            <div v-if="stock.companyProfile.numberOfRecordShareholders">
+                        <div v-if="STOCK.companyProfile">
+                            <div v-if="STOCK.companyProfile.numberOfRecordShareholders">
                                 <div class="d-flex">
                                     <div>
                                         <strong>Shareholders of Record</strong> <span v-html="numberOfRecordShareholders"></span>
@@ -123,8 +123,8 @@
                         <th>Description</th>
                     </tr>
                     </thead>
-                    <tbody v-if="stock.corporateActions && stock.corporateActions.length > 0">
-                    <tr v-for="(action, index) in stock.corporateActions">
+                    <tbody v-if="STOCK.corporateActions && STOCK.corporateActions.length > 0">
+                    <tr v-for="(action, index) in STOCK.corporateActions">
                         <td v-html="action_actionType(action, index)"></td>
                         <td v-html="action_symbol(action,index)"></td>
                         <td v-html="action_changeDate(action,index)"></td>
@@ -143,32 +143,34 @@
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     name: "SecurityDetailsTab",
-      props:['stock'],
     computed:{
+        ...mapGetters(['STOCK']),
       symbol(){
-        return this.listen('symbol',this.stock.symbol)
+        return this.listen('symbol',this.STOCK.symbol)
       },
       marketCap(){
-        if(!this.stock.overview) return null;
-        return this.listen('overview.marketCap', this.stock.overview.marketCap);
+        if(!this.STOCK.overview) return null;
+        return this.listen('overview.marketCap', this.STOCK.overview.marketCap);
       },
       estimatedMarketCapAsOfDate(){
-        if(!this.stock.companyProfile) return null;
-        return this.listen('companyProfile.estimatedMarketCapAsOfDate', this.dateConvert(this.stock.companyProfile.estimatedMarketCapAsOfDate));
+        if(!this.STOCK.companyProfile) return null;
+        return this.listen('companyProfile.estimatedMarketCapAsOfDate', this.dateConvert(this.STOCK.companyProfile.estimatedMarketCapAsOfDate));
       },
       // securities(){
-      //   if(!this.stock.companyProfile) return null;
-      //   return this.listen('companyProfile.securities', this.stock.companyProfile.securities, true);
+      //   if(!this.STOCK.companyProfile) return null;
+      //   return this.listen('companyProfile.securities', this.STOCK.companyProfile.securities, true);
       // },
       numberOfRecordShareholders(){
-        if(!this.stock.companyProfile) return null;
-        return this.listen('companyProfile.numberOfRecordShareholders', this.stock.companyProfile.numberOfRecordShareholders, true);
+        if(!this.STOCK.companyProfile) return null;
+        return this.listen('companyProfile.numberOfRecordShareholders', this.STOCK.companyProfile.numberOfRecordShareholders, true);
       },
       numberOfRecordShareholdersDate(){
-        if(!this.stock.companyProfile) return null;
-        return this.listen('companyProfile.numberOfRecordShareholdersDate', this.dateConvert(this.stock.companyProfile.numberOfRecordShareholdersDate), true);
+        if(!this.STOCK.companyProfile) return null;
+        return this.listen('companyProfile.numberOfRecordShareholdersDate', this.dateConvert(this.STOCK.companyProfile.numberOfRecordShareholdersDate), true);
       },
     },
       methods: {

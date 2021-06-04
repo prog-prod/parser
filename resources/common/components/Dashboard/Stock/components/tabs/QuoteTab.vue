@@ -4,17 +4,17 @@
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Open</span>
-                    <p v-if="stock.overview" class="fw-bold value">{{ openingPrice }}</p>
+                    <p v-if="STOCK.overview" class="fw-bold value">{{ openingPrice }}</p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Daily Range</span>
-                    <p v-if="stock.overview" class="fw-bold value">
-                        <span v-if="stock.overview.dailyLow" v-html="dailyLow"></span>
-                        <span v-if="stock.overview.dailyLow && stock.overview.dailyHigh">-</span>
-                        <span v-if="stock.overview.dailyHigh" v-html="dailyHigh"></span>
+                    <p v-if="STOCK.overview" class="fw-bold value">
+                        <span v-if="STOCK.overview.dailyLow" v-html="dailyLow"></span>
+                        <span v-if="STOCK.overview.dailyLow && STOCK.overview.dailyHigh">-</span>
+                        <span v-if="STOCK.overview.dailyHigh" v-html="dailyHigh"></span>
                     </p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
@@ -23,31 +23,31 @@
                 <div class="item justify-content-center position-relative text-center">
                     <span>Volume</span>
                     <!--                                        .volume-->
-                    <p v-if="stock.overview" class="fw-bold value" v-html="volumeFormatted"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="volumeFormatted"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Dividend</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="dividend"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="dividend"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Prev Close</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="previousClose"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="previousClose"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>52WK Range</span>
-                    <p v-if="stock.overview" class="fw-bold value">
-                        <span v-if="stock.overview.annualLow" v-html="annualLow"></span>
-                        <span v-if="stock.overview.annualLow && stock.overview.annualHigh">-</span>
-                        <span v-if="stock.overview.annualHigh" v-html="annualHigh"></span>
+                    <p v-if="STOCK.overview" class="fw-bold value">
+                        <span v-if="STOCK.overview.annualLow" v-html="annualLow"></span>
+                        <span v-if="STOCK.overview.annualLow && STOCK.overview.annualHigh">-</span>
+                        <span v-if="STOCK.overview.annualHigh" v-html="annualHigh"></span>
                     </p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
@@ -55,42 +55,42 @@
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Average Vol (30D)</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="thirtyDaysAvgVol"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="thirtyDaysAvgVol"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Net Dividend Yield</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="_yield"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="_yield"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Best Bid</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="bestBid"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="bestBid"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Best Ask</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="bestAsk"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="bestAsk"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Market Cap</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="marketCap"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="marketCap"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
             <div class="col-lg-3">
                 <div class="item justify-content-center position-relative text-center">
                     <span>Shares Out</span>
-                    <p v-if="stock.overview" class="fw-bold value" v-html="sharesOutstanding"></p>
+                    <p v-if="STOCK.overview" class="fw-bold value" v-html="sharesOutstanding"></p>
                     <p v-else class="fw-bold value">0</p>
                 </div>
             </div>
@@ -99,67 +99,69 @@
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     name: "QuoteTab",
-      props:['stock'],
       computed:{
+        ...mapGetters(['STOCK']),
           openingPrice(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.openingPrice',this.stock.overview.openingPrice)
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.openingPrice',this.STOCK.overview.openingPrice)
           },
           dailyLow(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.dailyLow',this.stock.overview.dailyLow)
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.dailyLow',this.STOCK.overview.dailyLow)
           },
           dailyHigh(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.dailyHigh',this.stock.overview.dailyHigh)
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.dailyHigh',this.STOCK.overview.dailyHigh)
           },
           volumeFormatted(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.volumeFormatted', this.stock.overview.volumeFormatted);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.volumeFormatted', this.STOCK.overview.volumeFormatted);
           },
           dividend(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.dividend', this.stock.overview.dividend);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.dividend', this.STOCK.overview.dividend);
           },
           previousClose(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.previousClose', this.stock.overview.previousClose);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.previousClose', this.STOCK.overview.previousClose);
           },
           annualLow(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.annualLow', this.stock.overview.annualLow);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.annualLow', this.STOCK.overview.annualLow);
           },
           annualHigh(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.annualHigh', this.stock.overview.annualHigh);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.annualHigh', this.STOCK.overview.annualHigh);
           },
           thirtyDaysAvgVol(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.thirtyDaysAvgVol', this.stock.overview.thirtyDaysAvgVol);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.thirtyDaysAvgVol', this.STOCK.overview.thirtyDaysAvgVol);
           },
           _yield(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.yield', this.stock.overview.yield);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.yield', this.STOCK.overview.yield);
           },
           bestBid(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.bidPrice', this.stock.overview.bidPrice)
-                  + 'x' + this.listen('overview.bidPrice', this.stock.overview.bidSize);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.bidPrice', this.STOCK.overview.bidPrice)
+                  + 'x' + this.listen('overview.bidPrice', this.STOCK.overview.bidSize);
           },
           bestAsk(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.askPrice', this.stock.overview.bidPrice)
-                  + 'x' + this.listen('overview.askSize', this.stock.overview.bidSize);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.askPrice', this.STOCK.overview.bidPrice)
+                  + 'x' + this.listen('overview.askSize', this.STOCK.overview.bidSize);
           },
           marketCap(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.marketCap', this.stock.overview.marketCap);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.marketCap', this.STOCK.overview.marketCap);
           },
           sharesOutstanding(){
-              if(!this.stock.overview) return null;
-              return this.listen('overview.sharesOutstanding', this.stock.overview.sharesOutstanding);
+              if(!this.STOCK.overview) return null;
+              return this.listen('overview.sharesOutstanding', this.STOCK.overview.sharesOutstanding);
           }
       }
   }

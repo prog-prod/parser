@@ -21,11 +21,17 @@
                                 <div id="sidebar-menu" class="mm-active">
                                     <!-- Left Menu Start -->
                                     <ul class="metismenu list-unstyled mm-show" id="side-menu">
+                                        <li :class="{'mm-active': STOCK_HISTORY_DATE === initialStockDate}" class=" cursor-pointer">
+                                            <a @click.prevent="showInitialStock"  class="dropdown-item" >
+                                                • <span>{{INITIAL_STOCK.created_at}}</span>
+                                            </a>
+                                        </li>
                                         <li class="menu-title">Stock History</li>
-
-                                        <li :class="{'mm-active': STOCK_HISTORY_ID === history.id}" class="cursor-pointer" v-for="history in histories">
-                                            <a @click.prevent="showHistory(history.id)"  class="dropdown-item" >
-                                                • <span>{{ history.created_at }}</span>
+                                        <li :class="{'mm-active': STOCK_HISTORY_DATE === date }" class="cursor-pointer"
+                                            v-for="(history,date) in histories">
+                                            <a @click.prevent="showHistory(history[0].history_id,history[0].stock_id,history[0].date, history[0].time)"
+                                               class="dropdown-item" >
+                                                • <span>{{ history[0].date }} {{ history[0].time }} </span>
                                             </a>
                                         </li>
                                     </ul>
@@ -63,18 +69,35 @@
             histories: []
         }),
         computed:{
-          ...mapGetters(['showRightSidebar', 'stockIdHistory', 'STOCK_HISTORY_ID'])
+          ...mapGetters([
+              'showRightSidebar',
+              'stockIdHistory',
+              'STOCK_HISTORY_DATE',
+              'INITIAL_STOCK',
+              'STOCK'
+          ]),
+            initialStockDate(){
+              return this.INITIAL_STOCK.created_at ? this.INITIAL_STOCK.created_at.split(' ')[0] : '';
+            }
         },
         methods:{
-            async showHistory(history_id){
-                await this.$store.commit('SET_STOCK_HISTORY_ID',history_id);
-                console.log(this.STOCK_HISTORY_ID)
+            showInitialStock(){
+                this.$store.commit('SET_STOCK',this.INITIAL_STOCK);
+            },
+            async showHistory(history_id,stock_id,date, time){
+                this.$store.commit('SET_STOCK_HISTORY_DATE',date);
+                await this.$store.dispatch('FETCH_STOCK_HISTORY',{
+                    history_id,
+                    stock_id,
+                    date,
+                    time
+                })
             },
             collapseRightSidebar(){
                 this.$store.commit('change_show_right_sidebar', !this.showRightSidebar)
             },
             async getStockHistory(stock_id){
-                const h = await StockService.getHistory(stock_id);
+                const h = await StockService.getHistoryDates(stock_id);
                 this.histories = h.history;
             }
         },

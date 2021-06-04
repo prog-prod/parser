@@ -8,13 +8,17 @@ export default {
         },
         stockIdHistory: null,
         stockUpdatedColumns: null,
-        stockHistoryId: null,
+        stockHistoryDate: null,
+        stock: {},
+        initial_stock: {}
     },
     getters: {
         STOCKS: (state) => state.stocks,
         stockIdHistory: (state) => state.stockIdHistory,
         STOCK_UPDATED_COLUMNS: (state) => state.stockUpdatedColumns,
-        STOCK_HISTORY_ID: (state) => state.stockHistoryId,
+        STOCK_HISTORY_DATE: (state) => state.stockHistoryDate,
+        STOCK: (state) => state.stock,
+        INITIAL_STOCK: (state) => state.initial_stock
     },
     actions:{
         FETCH_STOCK_DATA({commit}, filterData){
@@ -27,10 +31,16 @@ export default {
                 commit('SET_STOCK_UPDATED_COLUMNS', response.columns)
             });
         },
-        GET_STOCK_HISTORY_BY_ID({commit}, { stock_id }){
-            // return StockService.getUpdatedColumns(stock_id).then((response) => {
-            //     commit('SET_STOCK_UPDATED_COLUMNS', response.columns)
-            // });
+        FETCH_STOCK_HISTORY({commit}, data){
+            return StockService.getHistory(data).then((response) => {
+                commit('SET_STOCK', response.stock)
+            });
+        },
+        LOAD_STOCK({commit}, stock_id) {
+            return StockService.show(stock_id).then((response) => {
+                commit('SET_STOCK',response.stock);
+                commit('SET_INITIAL_STOCK',response.stock);
+            })
         }
     },
     mutations: {
@@ -41,9 +51,11 @@ export default {
         SET_STOCK_ID_HISTORY:(state,val) => {
             state.stockIdHistory = val;
         },
-        SET_STOCK_HISTORY_ID:(state,val) => {
-            state.stockHistoryId = val;
+        SET_STOCK_HISTORY_DATE:(state,val) => {
+            state.stockHistoryDate = val;
         },
-        SET_STOCK_UPDATED_COLUMNS: (state, val) =>  state.stockUpdatedColumns = val
+        SET_STOCK_UPDATED_COLUMNS: (state, val) =>  state.stockUpdatedColumns = val,
+        SET_STOCK: (state, val) =>  state.stock = val,
+        SET_INITIAL_STOCK: (state, val) =>  state.initial_stock = val
     },
 }

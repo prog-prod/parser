@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\BaseTrait;
+use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
     use HasFactory;
+    use StockHistoryTrait;
+    use BaseTrait;
 
     protected $fillable = [
     	"id",
@@ -99,10 +103,15 @@ class Stock extends Model
         return $this->hasOne(StockCompanyProfile::class, 'stock_id', 'id');
     }
 
-    public static function getAllWithFilter($data){
+    public function historyUpdates()
+    {
+        return $this->hasMany(\App\Models\HistoryUpdate::class);
+    }
+
+    public static function getAllWithFilter($data)
+    {
 
         $stockFilter = auth()->user()->stockFilter;
-
         $price_range = $stockFilter->getPricesRange($data['price_min'] ?? null, $data['price_max'] ?? null);
 
 
@@ -127,7 +136,8 @@ class Stock extends Model
 //            ? $this->updated_at >  $this->history()->latest()->updated_at
 //            : false;
 //    }
-    private function getDiffColumns(){
+    private function getDiffColumns()
+    {
 
         $stock_data = $this->makeHidden(['id', 'created_at', 'updated_at'])->getRawOriginal();
         unset($stock_data['id'],$stock_data['created_at'],$stock_data['updated_at']);
@@ -169,6 +179,80 @@ class Stock extends Model
         );
     }
 
+    public function getUpdates()
+    {
+        return $this->historyUpdates()
+            ->select('model', \DB::raw("DATE_FORMAT(created_at,'%d-%m-%Y') as date"),
+                \DB::raw("DATE_FORMAT(updated_at,'%T') as time"),
+                'created_at',
+                'updated_at',
+                'stock_id',
+                'history_id'
+            )
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy('date');
+
+    }
+
+    public function getStockFromHistory($data)
+    {
+        $dates = $this->getUpdates();
+        $date = $data['date'];
+
+        $dates = $dates->filter( function ($q,$k) use ($date){
+            return $date === $k;
+        })->toArray();
+
+        $stock = $this->toArray();
+
+
+        foreach ($dates[$date] as $param) {
+
+            if ($param['model'] == StockOverview::class)
+            {
+                $stock['overview'] = StockOverviewHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockCompanyProfile::class)
+            {
+                $stock['companyProfile'] = StockCompanyProfileHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockNews::class)
+            {
+                $stock['news'] = StockNewsHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == Stock::class)
+            {
+                $stock['history'] = $this->history->find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockCorporateAction::class)
+            {
+                $stock['corporateActions'][0] = StockCorporateActionHistory::find($param['history_id'])->toArray();
+            }
+        }
+
+        $stock_options = [
+            'overview' => StockOverviewHistory::class,
+            'companyProfile' => StockCompanyProfileHistory::class,
+            'news' => StockNewsHistory::class,
+            'history' => StockOverviewHistory::class,
+            'corporateActions' => StockOverviewHistory::class,
+        ];
+
+        foreach($stock_options as $relation => $class){
+            if(!isset($stock[$relation])){
+                $model = (new $class)->whereStockId($this->id)->get();
+                if($model->isNotEmpty()){
+                    $stock[$relation] = $this->casts_array($model->last()->toArray(),(new $class)->getCasts());
+                }else{
+                    $stock[$relation] = $this->casts_array($this->$relation->toArray(),(new $class)->getCasts());
+                }
+            }
+        }
+
+        return $stock;
+
+    }
     private function addPrefixToKeys($array,$prefix,$glue = '.')
     {
         $array_result = [];

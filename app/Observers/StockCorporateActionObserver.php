@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Events\HistoryUpdateEvent;
+use App\Models\Stock;
 use App\Models\StockCorporateAction;
 
 class StockCorporateActionObserver
@@ -28,9 +30,11 @@ class StockCorporateActionObserver
 
         if (array_diff($originalDiff, $diff->toArray())) {
             // add current stock data to history
-            $stock->history()->create(
+            $history = $stock->history()->create(
                 $stock->makeHidden('id', 'created_at', 'updated_at')->getRawOriginal()
             );
+            event( new HistoryUpdateEvent(StockCorporateAction::class, $stock->stock_id, $history->id));
+
         }
 //        NotifyUsersAboutUpdatedStockJob::dispatchNow($stock);
     }

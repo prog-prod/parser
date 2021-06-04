@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BaseTrait;
 use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ class StockNews extends Model
 {
     use HasFactory;
     use StockHistoryTrait;
+    use BaseTrait;
 
     protected $fillable = [
     	"original_id",
@@ -54,8 +56,8 @@ class StockNews extends Model
 
         if(!$history) return [];
 
-        $a = $this->casts_array($current);
-        $b = $this->casts_array($history);
+        $a = $this->casts_array($current,$this->casts);
+        $b = $this->casts_array($history,$this->casts);
         $current = $this->to_single_array($a);
         $history = $this->to_single_array($b);
 

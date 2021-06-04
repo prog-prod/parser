@@ -49,7 +49,8 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('stocks', StockController::class);
 
     Route::get('get-market-list', [StockController::class, 'getMarketList']);
-    Route::get('stock/get-stock-history/{stock}', [StockController::class, 'getStockHistory']);
+    Route::get('stock/get-history-updates/{stock}', [StockController::class, 'getStockHistory']);
     Route::get('stock/get-updated-columns/{stock}', [StockController::class, 'getUpdatedColumns']);
+    Route::post('stock/get-stock-history', [StockController::class, 'getHistory']);
 });
 

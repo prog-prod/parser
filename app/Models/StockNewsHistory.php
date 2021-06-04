@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StockNewsHistory extends Model
 {
     use HasFactory;
+    use BaseTrait;
 
     protected $fillable = [
         "stock_news_id",

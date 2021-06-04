@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use App\Events\HistoryUpdateEvent;
 use App\Jobs\NotifyUsersAboutUpdatedStockJob;
+use App\Models\Stock;
 use App\Models\StockOverview;
 
 class StockOverviewObserver
@@ -38,9 +40,10 @@ class StockOverviewObserver
         // if original data and current data is different - creating history row and notifications
         if (array_diff($originalDiff, $diff->toArray()))
         {
-            $stockOverview->history()->create(
+            $history = $stockOverview->history()->create(
                 $originalDiff
             );
+            event( new HistoryUpdateEvent(StockOverview::class, $stockOverview->stock_id, $history->id));
 
             // make notifications in telegram about stock overview changes (a lot of data in this table)
             NotifyUsersAboutUpdatedStockJob::dispatchNow($stockOverview);

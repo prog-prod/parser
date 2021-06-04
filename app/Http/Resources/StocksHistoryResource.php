@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\StockCompanyProfileHistory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StocksHistoryResource extends JsonResource
@@ -27,8 +28,8 @@ class StocksHistoryResource extends JsonResource
             'shortInterestPercent' =>number_format($this->shortInterestPercent,2, '.', ','),
             'volume' => number_format($this->volume,2, '.', ','),
             'isBank' => $this->isBank,
-            'overview' => new StockOverviewResource($this->overview),
-            'companyProfile' => new StockCompanyProfileResource($this->companyProfile),
+//            'overview' => new StockOverviewHistoryResource($this->overview),
+//            'companyProfile' => new StockCompanyProfileHistoryResource($this->companyProfile),
     //            'news' => StockNewsResource::collection($this->news),
 //            'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions)
             'created_at' => $this->created_at->format('d.m.Y H:i:s')

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,7 @@ class StockCompanyProfileHistory extends Model
 {
     use HasFactory;
     public $timestamps = true;
+    use BaseTrait;
 
     protected $fillable = [
         'stock_id',
@@ -111,4 +113,10 @@ class StockCompanyProfileHistory extends Model
         'standardDirectorList' => 'array',
         'securities' => 'array',
     ];
+
+    public function stock()
+    {
+        return $this->belongsTo(StocksHistory::class);
+    }
+
 }

@@ -26,9 +26,9 @@ trait StockHistoryTrait
         return $result;
     }
 
-    public function casts_array($array){
+    public function casts_array($array,$casts){
 
-        $casts = collect($this->casts)->filter(function ($v) { return $v === 'array';} )->toArray();
+        $casts = collect($casts)->filter(function ($v) { return $v === 'array';} )->toArray();
 
         foreach ($casts as $key => $cast) {
             $array[$key] = collect($array[$key])->jsonSerialize();

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StockCorporateAction extends Model
 {
     use HasFactory;
+    use BaseTrait;
 
     protected $table = 'stock_corporate_actions';
 
