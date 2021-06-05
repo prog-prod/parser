@@ -2,9 +2,17 @@
 
 namespace App\Providers;
 
+use App\Events\HistoryUpdateEvent;
+use App\Listeners\HistoryUpdateListener;
 use App\Models\Stock;
+use App\Models\StockCompanyProfile;
+use App\Models\StockCorporateAction;
+use App\Models\StockNews;
 use App\Models\StockOverview;
 use App\Models\User;
+use App\Observers\StockCompanyProfileObserver;
+use App\Observers\StockCorporateActionObserver;
+use App\Observers\StockNewsObserver;
 use App\Observers\StockObserver;
 use App\Observers\StockOverviewObserver;
 use App\Observers\UserObserver;
@@ -23,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        HistoryUpdateEvent::class => [
+            HistoryUpdateListener::class
+        ]
     ];
 
     /**
@@ -35,5 +46,8 @@ class EventServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         StockOverview::observe(StockOverviewObserver::class);
         Stock::observe(StockObserver::class);
+        StockCompanyProfile::observe(StockCompanyProfileObserver::class);
+        StockCorporateAction::observe(StockCorporateActionObserver::class);
+        StockNews::observe(StockNewsObserver::class);
     }
 }

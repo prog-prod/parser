@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { store } from './store';
+import store from './store/index';
 
 Vue.use(VueRouter);
 
@@ -59,6 +59,9 @@ const router = new VueRouter({
 // Middleware
 router.beforeEach(
     (to, from, next) => {
+
+        store.dispatch('RESET_HISTORY');
+
         if (to.matched.some(record => record.meta.guest === false)) {
             if (to.meta.admin && ! store.getters.isLoggedIn) {
                 // If the ADMIN is not logged in - push him to login page
@@ -80,7 +83,7 @@ router.beforeEach(
             next({name: 'dashboard'});
         } else if (to.matched.some(record => record.meta.guest)) {
             next();
-        } else {
+        }else {
             next();
         }
     }

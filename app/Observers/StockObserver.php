@@ -2,11 +2,14 @@
 
 namespace App\Observers;
 
+use App\Events\HistoryUpdateEvent;
 use App\Jobs\Parser\StockCompanyProfileParseJob;
 use App\Jobs\Parser\StockCorporateParseJob;
 use App\Jobs\Parser\StockNewsParseJob;
 use App\Jobs\Parser\StockOverviewParseJob;
+use App\Models\HistoryUpdate;
 use App\Models\Stock;
+use App\Models\UpdatedStocks;
 
 class StockObserver
 {
@@ -41,18 +44,17 @@ class StockObserver
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);
 
+        $originalDiff = new Stock($originalDiff);
+
         // if original data and current data is different - creating history row
-        if (array_diff($originalDiff, $diff->toArray()))
+        if ($originalDiff->toJson() !== $diff->toJson())
         {
             // add current stock data to history
-            $stock->history()->create(
-                $stock->makeHidden('id', 'created_at', 'updated_at')->getRawOriginal()
+            $history = $stock->history()->create(
+                $originalDiff->toArray()
             );
+
+            event(new HistoryUpdateEvent(Stock::class, $stock->id, $history->id));
         }
-    }
-
-    public function updated(Stock $stock)
-    {
-
     }
 }

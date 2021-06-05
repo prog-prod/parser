@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Casts\ArrayCast;
+use App\Traits\BaseTrait;
+use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StockCompanyProfile extends Model
 {
     use HasFactory;
+    use StockHistoryTrait;
+    use BaseTrait;
 
     protected $table = 'stock_company_profiles';
 
@@ -110,22 +115,47 @@ class StockCompanyProfile extends Model
 
     protected $casts = [
         'estimatedMarketCap' => 'float',
-        'auditors' => 'array',
-        'indexStatuses' => 'array',
-        'investmentBanks' => 'array',
-        'investorRelationFirms' => 'array',
-        'notes' => 'array',
-        'legalCounsels' => 'array',
-        'officers' => 'array',
-        'otcAward' => 'array',
-        'otherSecurities' => 'array',
-        'premierDirectorList' => 'array',
-        'standardDirectorList' => 'array',
-        'securities' => 'array',
+        'auditors' => ArrayCast::class,
+        'indexStatuses' => ArrayCast::class,
+        'investmentBanks' => ArrayCast::class,
+        'investorRelationFirms' => ArrayCast::class,
+        'notes' => ArrayCast::class,
+        'legalCounsels' => ArrayCast::class,
+        'officers' => ArrayCast::class,
+        'otcAward' => ArrayCast::class,
+        'otherSecurities' => ArrayCast::class,
+        'premierDirectorList' => ArrayCast::class,
+        'standardDirectorList' => ArrayCast::class,
+        'securities' => ArrayCast::class,
     ];
 
+    public function history()
+    {
+        return $this->hasMany(StockCompanyProfileHistory::class,'stock_company_profile_id','id');
+    }
     public function stock()
     {
         return $this->belongsTo(Stock::class);
+    }
+
+    public function getDiffColumns()
+    {
+        $current = $this->toArray();
+        unset($current['id'],$current['created_at'],$current['updated_at']);
+
+        $history = $this->history->last()
+            ?  $this->history->last()->toArray()
+            : [];
+
+        if (!$history) {
+            return [];
+        }
+
+        $a = $this->casts_array($current,$this->casts);
+        $b = $this->casts_array($history,$this->casts);
+        $current = $this->to_single_array($a);
+        $history = $this->to_single_array($b);
+
+        return array_diff($current, $history);
     }
 }

@@ -62,4 +62,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserVerification::class);
     }
+
+    public function stockViews(){
+        return $this->hasMany(StockViews::class);
+    }
 }

@@ -3,12 +3,16 @@
 namespace App\Jobs\Parser;
 
 use App\Models\Stock;
+use App\Models\User;
+use App\Notifications\ErrorParseNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
+use NotificationChannels\Telegram\TelegramMessage;
 
 class StockNewsParseJob implements ShouldQueue
 {
@@ -54,7 +58,13 @@ class StockNewsParseJob implements ShouldQueue
 
                 if ($content = trim($newsDetail->body()))
                 {
-                    $this->stock->news()->whereOriginalId($news->original_id)->update(['content' => $content]);
+                    try {
+                        $this->stock->news()->whereOriginalId($news->original_id)->update(['content' => $content]);
+                    }
+                    catch (\Exception $e) {
+                        $message = "**ERROR Parse (StockNewsParseJob)**";
+                        Notification::send([User::first()], new ErrorParseNotification($message, $e->getMessage()));
+                    }
                 }
 
                 sleep(2.5);

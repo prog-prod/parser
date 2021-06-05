@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 use App\Enums\UserRoleEnum;
+use App\Models\Stock;
+use App\Models\StocksHistory;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 

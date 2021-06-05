@@ -28,6 +28,7 @@ export const store = new Vuex.Store({
     {
         loginSuccess({commit}, data)
         {
+            console.log('auth_success', data);
             commit('auth_success', {user: data.user, token: data.access_token});
             return true;
         },

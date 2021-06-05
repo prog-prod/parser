@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Casts\NumberDotFormatCast;
+use App\Traits\BaseTrait;
+use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
     use HasFactory;
+    use StockHistoryTrait;
+    use BaseTrait;
 
     protected $fillable = [
     	"id",
@@ -69,6 +74,14 @@ class Stock extends Model
 		"perfQxCan52Weeks"
     ];
 
+    protected $casts = [
+        'shortInterest' => NumberDotFormatCast::class,
+        'pct1Day' => NumberDotFormatCast::class,
+        'shortInterestPercent' => NumberDotFormatCast::class,
+        'volume' => NumberDotFormatCast::class,
+        'price' => NumberDotFormatCast::class,
+    ];
+
     public function scopePriceRange($query, $range)
     {
         return $query->whereBetween('price', $range);
@@ -91,7 +104,7 @@ class Stock extends Model
 
     public function corporateActions()
     {
-        return $this->hasMany(StockCorporateAction::class);
+        return $this->hasMany(StockCorporateAction::class, 'stock_id', 'id');
     }
 
     public function companyProfile()
@@ -99,27 +112,207 @@ class Stock extends Model
         return $this->hasOne(StockCompanyProfile::class, 'stock_id', 'id');
     }
 
-    public static function getAllWithFilter($data){
+    public function historyUpdates()
+    {
+        return $this->hasMany(\App\Models\HistoryUpdate::class);
+    }
 
-        $stockFilter = auth()->user()->stockFilter;
+    public function views()
+    {
+        return $this->hasMany(\App\Models\StockViews::class);
+    }
 
-        $price_range = $stockFilter->getPricesRange($data['price_min'] ?? null, $data['price_max'] ?? null);
+    public static function getAllWithFilter($data)
+    {
+        $stocks = Stock::orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
 
+        if (isset($data['price_min'])) {
+            $stocks->where('price_min', '<=', $data['price_min']);
+        }
 
-        $stocks = Stock::priceRange($price_range)
-            ->orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
+         if (isset($data['price_max'])) {
+             $stocks->where('price_max', '<=', $data['price_max']);
+         }
 
-        if(isset($data['market'])){
+        if (isset($data['market'])) {
             $stocks->where('market', $data['market']);
         }
-        if(isset($data['country'])){
+        if (isset($data['country'])){
             $stocks->where('country', $data['country']);
         }
-        if(isset($data['symbol'])){
-            $stocks->where('symbol', 'like', '%'.trim($data['symbol']).'%');
+        if (isset($data['symbol'])) {
+            $stocks->where('symbol', 'like', '%' . trim($data['symbol']) . '%');
         }
 
         return $stocks->paginate($data['per_page'] ?? 20);
+    }
+
+    public function viewStockUpdates(){
+        $user_id = user()->id;
+        $view = $this->views()->where(['user_id' => $user_id])->get();
+        if($view->isNotEmpty()){
+            return $view->first()->touch();
+        }
+        else {
+           return $this->views()->create([
+                'user_id' => $user_id
+            ]);
+        }
+    }
+    public function isViewed ()
+    {
+        $views = $this->views;
+        $last_update_datetime = $this->getLastUpdateDateTime();
+
+        $last_viewed_on = $views->isNotEmpty()
+            ? $views->first()->updated_at
+            : null;
+
+        if($last_viewed_on && $last_update_datetime) {
+            return $last_update_datetime < $last_viewed_on;
+        }else if($last_viewed_on && !$last_update_datetime){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    private function getDiffColumns()
+    {
+
+        $stock_data = $this->makeHidden(['id', 'created_at', 'updated_at'])->getRawOriginal();
+        unset($stock_data['id'],$stock_data['created_at'],$stock_data['updated_at']);
+        $stock_history = $this->history->last() ? $this->history->last()->toArray() : null;
+
+        if(!$stock_history) return [];
+
+        return array_diff($stock_data, $stock_history);
+    }
+
+    public function getUpdatedColumns()
+    {
+       $stock_diff = $this->getDiffColumns();
+       $stock_overview_diff = $this->overview
+           ? $this->addPrefixToKeys($this->overview->getDiffColumns(),'overview')
+           : [];
+       $stock_company_profile_diff = $this->companyProfile
+           ? $this->addPrefixToKeys($this->companyProfile->getDiffColumns(),'companyProfile')
+           : [];
+
+       $stock_news = $this->news->last();
+       $stock_news_diff =  $stock_news
+           ? $this->addPrefixToKeys($stock_news->getDiffColumns(),'news')
+           : [];
+
+       $corporateActions = $this->corporateActions->last();
+
+       $stock_corporate_action_diff = $corporateActions
+           ? $this->addPrefixToKeys($corporateActions->getDiffColumns(), 'corporateActions')
+           : [];
+
+        return array_merge(
+            $stock_diff,
+            $stock_overview_diff,
+            $stock_company_profile_diff,
+            $stock_corporate_action_diff,
+            $stock_news_diff
+        );
+    }
+
+    public function getLastUpdateTime(){
+
+    }
+    public function getLastUpdateDateTime(){
+        $data = $this->getUpdates();
+        if($data->isNotEmpty()) {
+            return $data->sortBy('time')->first()->first()->updated_at;
+        }
+
+        return null;
+    }
+    public function getUpdates()
+    {
+        return $this->historyUpdates()
+            ->select('model', \DB::raw("DATE_FORMAT(created_at,'%d-%m-%Y') as date"),
+                \DB::raw("DATE_FORMAT(updated_at,'%T') as time"),
+                'created_at',
+                'updated_at',
+                'stock_id',
+                'history_id'
+            )
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy('date');
+    }
+
+    public function getStockFromHistory($data)
+    {
+        $dates = $this->getUpdates();
+        $date = $data['date'];
+
+        $dates = $dates->filter( function ($q,$k) use ($date){
+            return $date === $k;
+        })->toArray();
+
+        $stock = $this->toArray();
+
+        foreach ($dates[$date] as $param) {
+
+            if ($param['model'] == StockOverview::class)
+            {
+                $stock['overview'] = StockOverviewHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockCompanyProfile::class)
+            {
+                $stock['companyProfile'] = StockCompanyProfileHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockNews::class)
+            {
+                $stock['news'] = StockNewsHistory::find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == Stock::class)
+            {
+                $stock['history'] = $this->history->find($param['history_id'])->toArray();
+            }
+            else if ($param['model'] == StockCorporateAction::class)
+            {
+                $stock['corporateActions'][0] = StockCorporateActionHistory::find($param['history_id'])->toArray();
+            }
+        }
+
+        $stock_options = [
+            'overview' => StockOverviewHistory::class,
+            'companyProfile' => StockCompanyProfileHistory::class,
+            'news' => StockNewsHistory::class,
+            'history' => StockOverviewHistory::class,
+            'corporateActions' => StockOverviewHistory::class,
+        ];
+
+        foreach ($stock_options as $relation => $class)
+        {
+            if (!isset($stock[$relation]))
+            {
+                $model = (new $class)->whereStockId($this->id)->get();
+
+                if($model->isNotEmpty()) {
+                    $stock[$relation] = $this->casts_array($model->last()->toArray(),(new $class)->getCasts());
+                }
+                else if($this->$relation !== null) {
+                    $stock[$relation] = $this->casts_array($this->$relation->toArray(),(new $class)->getCasts());
+                }
+            }
+        }
+
+        return $stock;
+
+    }
+
+    private function addPrefixToKeys($array, $prefix, $glue = '.')
+    {
+        $array_result = [];
+        foreach ($array as $key => $value) {
+            $array_result[$prefix.$glue.$key] = $value;
+        }
+        return $array_result;
     }
 }
 

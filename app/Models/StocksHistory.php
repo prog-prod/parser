@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Casts\NumberDotFormatCast;
+use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StocksHistory extends Model
 {
     use HasFactory;
+    use BaseTrait;
 
     protected $table = 'stocks_history';
     public $timestamps = true;
@@ -72,6 +75,33 @@ class StocksHistory extends Model
 		"perfQxCan52Weeks"
     ];
 
+    protected $casts = [
+        'shortInterest' => NumberDotFormatCast::class,
+        'pct1Day' => NumberDotFormatCast::class,
+        'shortInterestPercent' => NumberDotFormatCast::class,
+        'volume' => NumberDotFormatCast::class,
+        'price' => NumberDotFormatCast::class,
+    ];
+
+    public function overview()
+    {
+        return $this->hasOne(StockOverviewHistory::class);
+    }
+
+    public function news()
+    {
+        return $this->hasMany(StockNewsHistory::class);
+    }
+
+    public function corporateActions()
+    {
+        return $this->hasMany(StockCorporateActionHistory::class);
+    }
+
+    public function companyProfile()
+    {
+        return $this->hasOne(StockCompanyProfileHistory::class);
+    }
     public function stock()
     {
         return $this->belongsTo(Stock::class);

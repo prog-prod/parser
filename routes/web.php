@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\HistoryUpdateEvent;
+use App\Models\Stock;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\Telegram\WebhookController;
 
@@ -19,8 +21,11 @@ Route::get('/', function() {
     return redirect()->to('/login');
 });
 
+Route::get('/test', [\App\Http\Controllers\Api\Stock\StockController::class,'test']);
+
 Route::any('tg/updates', WebhookController::class);
 
 Route::get('{path}', function() {
+//    dd(\App\Models\Stock::find(1)->getUpdatedColumns());
     return view('dashboard.master');
 })->where('path', '.*')->name('vue-route');

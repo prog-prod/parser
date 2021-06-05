@@ -9,6 +9,10 @@ window.Vue = Vue;
 
 import router from './routes';
 import store from './store/index';
+import globMixin from './shared/mixins'
+import {mapGetters} from "vuex";
+
+Vue.mixin(globMixin);
 
 require('./bootstrap');
 require('./components');
@@ -16,5 +20,8 @@ require('./packages');
 
 const app = new Vue({
     store,
-    router
+    router,
+    computed:{
+        ...mapGetters(['showRightSidebar'])
+    }
 }).$mount('#app');

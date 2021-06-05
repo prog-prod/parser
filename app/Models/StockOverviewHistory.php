@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Casts\NumberDotFormatCast;
+use App\Casts\NumberWithoutDotFormatCast;
+use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class StockOverviewHistory extends Model
 {
     use HasFactory;
+    use BaseTrait;
 
     protected $table = 'stock_overviews_history';
     public $timestamps = true;
@@ -57,5 +61,20 @@ class StockOverviewHistory extends Model
 		"adr",
 		"isProfileVerified",
 		"profileVerifiedAsOfDate"
+    ];
+
+    protected $casts = [
+        'bidPrice' => NumberDotFormatCast::class,
+        'askPrice' => NumberDotFormatCast::class,
+        'dailyHigh' => NumberDotFormatCast::class,
+        'dailyLow' => NumberDotFormatCast::class,
+        'openingPrice' => NumberDotFormatCast::class,
+        'annualHigh' => NumberDotFormatCast::class,
+        'annualLow' => NumberDotFormatCast::class,
+        'dividend' => NumberDotFormatCast::class,
+        'yield' => NumberDotFormatCast::class,
+        'thirtyDaysAvgVol' => NumberWithoutDotFormatCast::class,
+        'marketCap' => NumberWithoutDotFormatCast::class,
+        'sharesOutstanding' => NumberWithoutDotFormatCast::class
     ];
 }

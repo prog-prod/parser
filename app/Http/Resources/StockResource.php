@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\StocksHistory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StockResource extends JsonResource
@@ -17,21 +18,23 @@ class StockResource extends JsonResource
         return [
             'id' => $this->id,
             'symbol' => $this->symbol,
-            'price' => number_format($this->price,2, '.', ','),
+            'price' => $this->price,
             'securityName' => $this->securityName,
             'market' => $this->market,
             'securityType' => $this->securityType,
             'country' => $this->country,
-            'pct1Day' => number_format($this->pct1Day,2, '.', ','),
-            'shortInterest' => number_format($this->shortInterest,2, '.', ','),
-            'shortInterestPercent' =>number_format($this->shortInterestPercent,2, '.', ','),
-            'volume' => number_format($this->volume,2, '.', ','),
+            'pct1Day' => $this->pct1Day,
+            'shortInterest' => $this->shortInterest,
+            'shortInterestPercent' => $this->shortInterestPercent,
+            'volume' => $this->volume,
             'isBank' => $this->isBank,
+            'isViewed' => $this->isViewed(),
             'overview' => new StockOverviewResource($this->overview),
-            'history' => StockResource::collection($this->history),
+            'history' => StocksHistoryResource::collection($this->history),
             'companyProfile' => new StockCompanyProfileResource($this->companyProfile),
 //            'news' => StockNewsResource::collection($this->news),
-            'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions)
+            'corporateActions' => StockCorporateActionsResource::collection($this->corporateActions),
+            'created_at' => $this->created_at->format('d.m.Y H:i:s')
         ];
     }
 }

@@ -13,10 +13,10 @@
 
             <!-- Tab panes -->
             <div class="tab-content p-3 pt-4 text-muted">
-                <OverviewTab :stock="stock"/>
-                <QuoteTab :stock="stock"/>
-                <CompanyProfileTab :stock="stock"/>
-                <SecurityDetailsTab :stock="stock"/>
+                <OverviewTab/>
+                <QuoteTab/>
+                <CompanyProfileTab/>
+                <SecurityDetailsTab/>
                 <div v-for="tab in ['news', 'financials', 'disclosure', 'research']" class="tab-pane" :id="tab" role="tabpanel">
                     <p class="mb-0">
                         Trust fund seitan letterpress, keytar raw denim keffiyeh etsy
@@ -37,18 +37,18 @@
   import CompanyProfileTab from "./tabs/CompanyProfileTab";
   import QuoteTab from "./tabs/QuoteTab";
   import OverviewTab from "./tabs/OverviewTab";
+  import {mapGetters} from "vuex";
 
   export default {
       components: {SecurityDetailsTab, CompanyProfileTab, QuoteTab, OverviewTab},
       name: "TabsCard",
-      props:['stock'],
       data: () => ({
           tabs: [
               { text: 'Overview', id: 'overview', icon : 'fas fa-home'},
               { text: 'Quote', id: 'quote', icon : 'far fa-user'},
               { text: 'Company Profile', id: 'company-profile', icon : 'far fa-envelope'},
               { text: 'Security Details', id: 'security-details', icon : 'fas fa-cog'},
-              // { text: 'News', id: 'news', icon : 'fas fa-cog'},
+              { text: 'News', id: 'news', icon : 'fas fa-cog'},
               // { text: 'Financials', id: 'financials', icon : 'fas fa-cog'},
               // { text: 'Disclosure', id: 'disclosure', icon : 'fas fa-cog'},
               // { text: 'Research', id: 'research', icon : 'fas fa-cog'},

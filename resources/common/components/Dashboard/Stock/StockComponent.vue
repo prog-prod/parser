@@ -1,36 +1,38 @@
 <template>
     <main-component>
-        <Breadcrumbs slot="breadcrumb-name">Details of Stock #{{ stock.id }}</Breadcrumbs>
+        <Breadcrumbs slot="breadcrumb-name">Details of Stock #{{ INITIAL_STOCK.id }}</Breadcrumbs>
         <div slot="content" class="dashboard">
-            <DetailsCard :stock="stock"/>
-            <TabsCard :stock="stock"/>
+            <DetailsCard/>
+            <TabsCard/>
         </div>
     </main-component>
 </template>
 
 <script>
-import StockService from '../../../shared/services/stock.service';
 import TabsCard from "./components/TabsCard";
 import Breadcrumbs from "../../common/Breadcrumbs";
 import DetailsCard from "./components/DetailsCard";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     components: {DetailsCard, Breadcrumbs, TabsCard},
-    data() {
-        return {
-            stock: {}
-        }
+    computed:{
+      ...mapGetters(['INITIAL_STOCK'])
     },
-    created() {
+    async created() {
+        await this.$store.dispatch('GET_STOCK_UPDATED_COLUMNS',{ stock_id: this.$route.params.id })
         return this.loadStock()
     },
     methods: {
+        ...mapActions(['VIEW_STOCK_UPDATES']),
         loadStock: function() {
-            StockService.show(this.$route.params.id).then((response) => {
-                this.stock = response.stock;
-            })
+           this.$store.dispatch('LOAD_STOCK',this.$route.params.id);
         },
 
+    },
+    mounted() {
+        this.$store.commit('SET_STOCK_ID_HISTORY',this.$route.params.id)
+        this.VIEW_STOCK_UPDATES(this.$route.params.id)
     }
 }
 </script>

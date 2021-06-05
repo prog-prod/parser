@@ -36,3 +36,16 @@
         }
     }
 </script>
+
+<style lang="scss">
+    #app {
+        .updated-column{
+            color:orange;
+        }
+        .right-sidebar-visible {
+            .main-content {
+                margin-right: 250px !important
+            }
+        }
+    }
+</style>
