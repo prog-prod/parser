@@ -27,16 +27,12 @@ class StockParseJob implements ShouldQueue
             'market' => StockMarketTypeEnum::getCategoriesIds()
         ])->json(), true);
 
-        info('stocks: ' . count($response['stocks']));
-
         if ($response && isset($response['stocks']))
         {
             foreach ($response['stocks'] as $stock)
             {
                 Stock::updateOrCreate(['symbol' => $stock['symbol']], $stock);
             }
-
-            info(Stock::count());
         }
     }
 }

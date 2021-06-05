@@ -110,32 +110,29 @@ class Stock extends Model
 
     public static function getAllWithFilter($data)
     {
+        $stocks = Stock::orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
 
-        $stockFilter = auth()->user()->stockFilter;
-        $price_range = $stockFilter->getPricesRange($data['price_min'] ?? null, $data['price_max'] ?? null);
+        if (isset($data['price_min'])) {
+            $stocks->where('price_min', '<=', $data['price_min']);
+        }
 
+         if (isset($data['price_max'])) {
+             $stocks->where('price_max', '<=', $data['price_max']);
+         }
 
-        $stocks = Stock::priceRange($price_range)
-            ->orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
-
-        if(isset($data['market'])){
+        if (isset($data['market'])) {
             $stocks->where('market', $data['market']);
         }
-        if(isset($data['country'])){
+        if (isset($data['country'])){
             $stocks->where('country', $data['country']);
         }
-        if(isset($data['symbol'])){
-            $stocks->where('symbol', 'like', '%'.trim($data['symbol']).'%');
+        if (isset($data['symbol'])) {
+            $stocks->where('symbol', 'like', '%' . trim($data['symbol']) . '%');
         }
 
         return $stocks->paginate($data['per_page'] ?? 20);
     }
 
-//    public function isUpdated(){
-//        return $this->updatedStocks()
-//            ? $this->updated_at >  $this->history()->latest()->updated_at
-//            : false;
-//    }
     private function getDiffColumns()
     {
 
@@ -147,6 +144,7 @@ class Stock extends Model
 
         return array_diff($stock_data, $stock_history);
     }
+
     public function getUpdatedColumns()
     {
 
@@ -168,7 +166,6 @@ class Stock extends Model
        $stock_corporate_action_diff = $corporateActions
            ? $this->addPrefixToKeys($corporateActions->getDiffColumns(), 'corporateActions')
            : [];
-
 
         return array_merge(
             $stock_diff,
@@ -192,7 +189,6 @@ class Stock extends Model
             ->orderByDesc('created_at')
             ->get()
             ->groupBy('date');
-
     }
 
     public function getStockFromHistory($data)
@@ -205,7 +201,6 @@ class Stock extends Model
         })->toArray();
 
         $stock = $this->toArray();
-
 
         foreach ($dates[$date] as $param) {
 
@@ -239,12 +234,15 @@ class Stock extends Model
             'corporateActions' => StockOverviewHistory::class,
         ];
 
-        foreach($stock_options as $relation => $class){
-            if(!isset($stock[$relation])){
+        foreach ($stock_options as $relation => $class){
+            if (!isset($stock[$relation]))
+            {
                 $model = (new $class)->whereStockId($this->id)->get();
-                if($model->isNotEmpty()){
+
+                if($model->isNotEmpty()) {
                     $stock[$relation] = $this->casts_array($model->last()->toArray(),(new $class)->getCasts());
-                }else{
+                }
+                else if($this->$relation !== null) {
                     $stock[$relation] = $this->casts_array($this->$relation->toArray(),(new $class)->getCasts());
                 }
             }
@@ -253,10 +251,10 @@ class Stock extends Model
         return $stock;
 
     }
-    private function addPrefixToKeys($array,$prefix,$glue = '.')
+    private function addPrefixToKeys($array, $prefix, $glue = '.')
     {
         $array_result = [];
-        foreach($array as $key => $value){
+        foreach ($array as $key => $value) {
             $array_result[$prefix.$glue.$key] = $value;
         }
         return $array_result;

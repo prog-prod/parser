@@ -19,16 +19,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        User::factory()
-//            ->create([
-//                'email' => 'admin@parser.com',
-//                'password' => bcrypt('admin5678'),
-//                'role' => UserRoleEnum::admin()->value
-//            ]);
-//
-//        Artisan::call('passport:install');
+        User::factory()
+            ->create([
+                'email' => 'admin@parser.com',
+                'password' => bcrypt('admin5678'),
+                'role' => UserRoleEnum::admin()->value
+            ]);
 
-
-        StocksHistory::factory()->count(100)->create();
+        Artisan::call('passport:install');
     }
 }

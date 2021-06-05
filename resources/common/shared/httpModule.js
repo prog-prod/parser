@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { store } from '../store';
+import store from '../store/index';
 import routes from '../routes';
 
 // Api URL
@@ -11,6 +11,7 @@ const httpClient = axios.create(config);
 
 const authInterceptor = config => {
     // Adding Api Token to each request
+    store.state.access_token = localStorage.getItem(process.env.MIX_TOKEN_KEY);
     if (store.state.access_token) {
         config.headers.Authorization = `Bearer ${store.state.access_token}`;
     }
