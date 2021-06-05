@@ -21,7 +21,7 @@
                                 <div id="sidebar-menu" class="mm-active">
                                     <!-- Left Menu Start -->
                                     <ul class="metismenu list-unstyled mm-show" id="side-menu">
-                                        <li :class="{'mm-active': STOCK_HISTORY_DATE === initialStockDate}" class=" cursor-pointer">
+                                        <li :class="{'mm-active': INITIAL_STOCK_ACTIVE}" class=" cursor-pointer">
                                             <a @click.prevent="showInitialStock"  class="dropdown-item" >
                                                 • <span>{{INITIAL_STOCK.created_at}}</span>
                                             </a>
@@ -76,12 +76,10 @@
               'INITIAL_STOCK',
               'STOCK'
           ]),
-            initialStockDate(){
-              return this.INITIAL_STOCK.created_at ? this.INITIAL_STOCK.created_at.split(' ')[0] : '';
-            }
         },
         methods:{
             showInitialStock(){
+                this.$store.commit('SET_STOCK_HISTORY_DATE',this.initialStockDate);
                 this.$store.commit('SET_STOCK',this.INITIAL_STOCK);
             },
             async showHistory(history_id,stock_id,date, time){
@@ -105,7 +103,6 @@
             if(this.stockIdHistory){
                 await this.getStockHistory(this.stockIdHistory);
             }
-
         }
 
     }

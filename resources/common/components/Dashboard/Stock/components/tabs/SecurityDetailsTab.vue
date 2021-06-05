@@ -2,7 +2,7 @@
     <div class="tab-pane" id="security-details" role="tabpanel">
         <div class="row">
             <div class="col-lg-12">
-                <h2>{{ symbol }} Security Details</h2>
+                <h2 v-html="symbol + ' Security Details'"></h2>
                 <hr>
                 <h3>Share Structure</h3>
                 <hr>
@@ -63,7 +63,7 @@
                             </div>
                             <div v-if="security.publicFloat" class="d-flex">
                                 <span class="w-100">Float</span>
-                                <span class="w-100" v-html="security_publicFloat(security,index)(security, index)"></span>
+                                <span class="w-100" v-html="security_publicFloat(security, index)"></span>
                                 <span class="w-100" v-html="security_publicFloatAsOfDate(security, index)"></span>
                             </div>
                             <div v-if="security.parValue" class="d-flex">

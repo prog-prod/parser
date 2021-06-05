@@ -41,6 +41,14 @@ export default {
                 commit('SET_STOCK',response.stock);
                 commit('SET_INITIAL_STOCK',response.stock);
             })
+        },
+        RESET_HISTORY({commit}){
+            commit('SET_STOCK_HISTORY_DATE',null);
+            commit('SET_INITIAL_STOCK',{});
+            commit('SET_STOCK',{});
+            commit('SET_STOCK_UPDATED_COLUMNS',null);
+            commit('SET_STOCK_ID_HISTORY',null);
+            commit('change_show_right_sidebar', false)
         }
     },
     mutations: {
