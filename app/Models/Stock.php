@@ -117,6 +117,11 @@ class Stock extends Model
         return $this->hasMany(\App\Models\HistoryUpdate::class);
     }
 
+    public function views()
+    {
+        return $this->hasMany(\App\Models\StockViews::class);
+    }
+
     public static function getAllWithFilter($data)
     {
         $stocks = Stock::orderBy($data['column'] ?? 'created_at', $data['order'] ?? 'desc');
@@ -142,6 +147,35 @@ class Stock extends Model
         return $stocks->paginate($data['per_page'] ?? 20);
     }
 
+    public function viewStockUpdates(){
+        $user_id = user()->id;
+        $view = $this->views()->where(['user_id' => $user_id])->get();
+        if($view->isNotEmpty()){
+            return $view->first()->touch();
+        }
+        else {
+           return $this->views()->create([
+                'user_id' => $user_id
+            ]);
+        }
+    }
+    public function isViewed ()
+    {
+        $views = $this->views;
+        $last_update_datetime = $this->getLastUpdateDateTime();
+
+        $last_viewed_on = $views->isNotEmpty()
+            ? $views->first()->updated_at
+            : null;
+
+        if($last_viewed_on && $last_update_datetime) {
+            return $last_update_datetime < $last_viewed_on;
+        }else if($last_viewed_on && !$last_update_datetime){
+            return true;
+        }else{
+            return false;
+        }
+    }
     private function getDiffColumns()
     {
 
@@ -184,6 +218,17 @@ class Stock extends Model
         );
     }
 
+    public function getLastUpdateTime(){
+
+    }
+    public function getLastUpdateDateTime(){
+        $data = $this->getUpdates();
+        if($data->isNotEmpty()) {
+            return $data->sortBy('time')->first()->first()->updated_at;
+        }
+
+        return null;
+    }
     public function getUpdates()
     {
         return $this->historyUpdates()

@@ -21,5 +21,8 @@ export default {
     },
     getUpdatedColumns(stock_id){
         return httpClient.get(`/stock/get-updated-columns/${stock_id}`)
+    },
+    viewStockUpdates(stock_id){
+        return httpClient.post(`stock/view-stock-updates/${stock_id}`)
     }
 };

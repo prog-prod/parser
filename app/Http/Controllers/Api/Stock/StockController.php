@@ -37,6 +37,9 @@ class StockController extends Controller
         ], 200);
     }
 
+    public function test(){
+        dd(Stock::find(1)->isUpdated());
+    }
     /**
      * Display the specified resource.
      *
@@ -66,6 +69,13 @@ class StockController extends Controller
         return response()->json([
             'result' => true,
             'history' => $stock->getUpdates()
+        ]);
+    }
+    public function viewStockUpdates(Stock $stock): JsonResponse
+    {
+        return response()->json([
+            'result' => true,
+            'viewed' => $stock->viewStockUpdates()
         ]);
     }
 

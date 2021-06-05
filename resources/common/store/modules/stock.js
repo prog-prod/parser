@@ -10,7 +10,14 @@ export default {
         stockUpdatedColumns: null,
         stockHistoryDate: null,
         stock: {},
-        initial_stock: {}
+        initial_stock: {},
+        filterData:{
+            price_min: null,
+            price_max: null,
+            market: null,
+            country: null,
+            symbol: null
+        },
     },
     getters: {
         STOCKS: (state) => state.stocks,
@@ -18,7 +25,17 @@ export default {
         STOCK_UPDATED_COLUMNS: (state) => state.stockUpdatedColumns,
         STOCK_HISTORY_DATE: (state) => state.stockHistoryDate,
         STOCK: (state) => state.stock,
-        INITIAL_STOCK: (state) => state.initial_stock
+        INITIAL_STOCK: (state) => state.initial_stock,
+        FILTER_DATA: (state) => {
+            let filters = {};
+            for(let filter in { ...state.filterData }){
+                if(state.filterData[filter]){
+                    filters[filter] = state.filterData[filter]
+                }
+            }
+
+            return filters;
+        }
     },
     actions:{
         FETCH_STOCK_DATA({commit}, filterData){
@@ -42,6 +59,11 @@ export default {
                 commit('SET_INITIAL_STOCK',response.stock);
             })
         },
+        VIEW_STOCK_UPDATES({commit,dispatch,getters}, stock_id){
+            return StockService.viewStockUpdates(stock_id).then((response) => {
+                dispatch('FETCH_STOCK_DATA',getters.FILTER_DATA)
+            });
+        },
         RESET_HISTORY({commit}){
             commit('SET_STOCK_HISTORY_DATE',null);
             commit('SET_INITIAL_STOCK',{});
@@ -55,6 +77,12 @@ export default {
         SET_STOCKS: (state, val) => {
             state.stocks.items = val.stocks
             state.stocks.pagination = val.pagination
+        },
+        SET_FILTER_DATA(state, params){
+            const prop = Object.keys(params)[0];
+            if(state.filterData.hasOwnProperty(prop)){
+                state.filterData[prop] = params[prop]
+            }
         },
         SET_STOCK_ID_HISTORY:(state,val) => {
             state.stockIdHistory = val;

@@ -29,7 +29,10 @@
                             <tr class="" v-if="stockFiltered.items.length === 0">
                                 <td class="lead text-center" :colspan="columns.length + 1">No data found.</td>
                             </tr>
-                            <tr v-for="(data, key1) in items" :key="data.id" class="m-datatable__row" v-else>
+                            <tr v-for="(data, key1) in items" :key="data.id"
+                                class="m-datatable__row"
+                                :class="{'not-viewed': !data.isViewed}"
+                                v-else>
                                 <td>{{ serialNumber(key1) }}</td>
                                 <td v-for="(column, columnKey) in columns">
                                     <div v-for="(value, key) in data">
@@ -75,13 +78,6 @@ export default {
     components: {FiltersComponent, FilterPrice, FilterMarket},
     data() {
         return {
-            filters:{
-                price_min: null,
-                price_max: null,
-                market: null,
-                country: null,
-                symbol: null
-            },
             stockFiltered: {
                 items: [],
                 pagination: {}
@@ -107,11 +103,15 @@ export default {
             ]
         }
     },
+    updated() {
+        console.log(this.FILTER_DATA)
+    },
     async created() {
+        console.log(this.FILTER_DATA)
        await this.fetchData();
     },
     computed: {
-        ...mapGetters(['STOCKS']),
+        ...mapGetters(['STOCKS','FILTER_DATA']),
         items(){
             return this.stockFiltered.items;
         },
@@ -139,41 +139,29 @@ export default {
     },
     methods: {
         ...mapActions(['FETCH_STOCK_DATA']),
-        maxPrice(price){
-            this.filters.price_max = price
+        maxPrice(price_max){
+            this.$store.commit('SET_FILTER_DATA', { price_max })
             this.fetchData();
-            // this.stockFiltered.items = this.STOCKS.items.map(d => ({...d})).filter(d => d.price <= price);
         },
-        minPrice(price){
-            this.filters.price_min = price
+        minPrice(price_min){
+            this.$store.commit('SET_FILTER_DATA', { price_min })
             this.fetchData();
-            // this.stockFiltered.items = this.STOCKS.items.filter(d => d.price >= price);
         },
         filterMarket(market){
-            this.filters.market = market;
+            this.$store.commit('SET_FILTER_DATA', { market })
             this.fetchData();
         },
         filterCountry(country){
-            this.filters.country = country;
+            this.$store.commit('SET_FILTER_DATA', { country })
             this.fetchData();
         },
         filterSymbol(symbol){
-            this.filters.symbol = symbol;
+            this.$store.commit('SET_FILTER_DATA', { symbol })
             this.fetchData();
-        },
-        getFilters(){
-            let filters = {};
-            for(let filter in this.filters){
-                if(this.filters[filter]){
-                    filters[filter] = this.filters[filter]
-                }
-            }
-
-            return filters;
         },
         async fetchData(){
 
-            const filters = this.getFilters();
+            const filters = this.FILTER_DATA;
 
             await this.FETCH_STOCK_DATA({
                 page: this.currentPage,
@@ -222,8 +210,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
     .cursor-pointer{
         cursor: pointer;
+    }
+    .m-datatable__row.not-viewed{
+        background-color: #fceee1 !important;
+        --bs-table-accent-bg: unset !important;
+        td{
+            background-color: unset;
+        }
     }
 </style>
