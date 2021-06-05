@@ -12,7 +12,7 @@
 import TabsCard from "./components/TabsCard";
 import Breadcrumbs from "../../common/Breadcrumbs";
 import DetailsCard from "./components/DetailsCard";
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     components: {DetailsCard, Breadcrumbs, TabsCard},
@@ -24,6 +24,7 @@ export default {
         return this.loadStock()
     },
     methods: {
+        ...mapActions(['VIEW_STOCK_UPDATES']),
         loadStock: function() {
            this.$store.dispatch('LOAD_STOCK',this.$route.params.id);
         },
@@ -31,6 +32,7 @@ export default {
     },
     mounted() {
         this.$store.commit('SET_STOCK_ID_HISTORY',this.$route.params.id)
+        this.VIEW_STOCK_UPDATES(this.$route.params.id)
     }
 }
 </script>

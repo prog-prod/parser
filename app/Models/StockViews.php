@@ -9,6 +9,10 @@ class StockViews extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'stock_id',
+    ];
 
     public function stock(){
         return $this->hasOne(Stock::class);

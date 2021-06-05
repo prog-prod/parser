@@ -28,6 +28,7 @@ class StockResource extends JsonResource
             'shortInterestPercent' => $this->shortInterestPercent,
             'volume' => $this->volume,
             'isBank' => $this->isBank,
+            'isViewed' => $this->isViewed(),
             'overview' => new StockOverviewResource($this->overview),
             'history' => StocksHistoryResource::collection($this->history),
             'companyProfile' => new StockCompanyProfileResource($this->companyProfile),
