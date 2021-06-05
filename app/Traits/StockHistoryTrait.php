@@ -1,13 +1,9 @@
 <?php
 
-
 namespace App\Traits;
-
 
 trait StockHistoryTrait
 {
-
-
     public function to_single_array($array, $parent_key= '', $glue = '.'){
         $result = [];
         foreach ($array as $key => $val){
@@ -35,6 +31,5 @@ trait StockHistoryTrait
         }
 
         return $array;
-
     }
 }

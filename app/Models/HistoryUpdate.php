@@ -24,11 +24,12 @@ class HistoryUpdate extends Model
         'model' => HistoryUpdateCast::class
     ];
 
-
-    public static function getLastUpdates($stock_id) {
+    public static function getLastUpdates($stock_id)
+    {
         return HistoryUpdate::where('created_at','>=',\DB::raw('CURDATE()'))
             ->whereStockId($stock_id)->get();
     }
+
     public function stock(){
         return $this->belongsTo(\App\Models\Stock::class);
     }

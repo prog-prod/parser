@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\NumberDotFormatCast;
 use App\Traits\BaseTrait;
 use App\Traits\StockHistoryTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,6 +72,14 @@ class Stock extends Model
 		"perfQxCan4Weeks",
 		"perfQxCan13Weeks",
 		"perfQxCan52Weeks"
+    ];
+
+    protected $casts = [
+        'shortInterest' => NumberDotFormatCast::class,
+        'pct1Day' => NumberDotFormatCast::class,
+        'shortInterestPercent' => NumberDotFormatCast::class,
+        'volume' => NumberDotFormatCast::class,
+        'price' => NumberDotFormatCast::class,
     ];
 
     public function scopePriceRange($query, $range)
@@ -147,7 +156,6 @@ class Stock extends Model
 
     public function getUpdatedColumns()
     {
-
        $stock_diff = $this->getDiffColumns();
        $stock_overview_diff = $this->overview
            ? $this->addPrefixToKeys($this->overview->getDiffColumns(),'overview')
@@ -234,7 +242,8 @@ class Stock extends Model
             'corporateActions' => StockOverviewHistory::class,
         ];
 
-        foreach ($stock_options as $relation => $class){
+        foreach ($stock_options as $relation => $class)
+        {
             if (!isset($stock[$relation]))
             {
                 $model = (new $class)->whereStockId($this->id)->get();
@@ -251,6 +260,7 @@ class Stock extends Model
         return $stock;
 
     }
+
     private function addPrefixToKeys($array, $prefix, $glue = '.')
     {
         $array_result = [];

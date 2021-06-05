@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\NumberDotFormatCast;
 use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,6 +73,14 @@ class StocksHistory extends Model
 		"perfQxCan4Weeks",
 		"perfQxCan13Weeks",
 		"perfQxCan52Weeks"
+    ];
+
+    protected $casts = [
+        'shortInterest' => NumberDotFormatCast::class,
+        'pct1Day' => NumberDotFormatCast::class,
+        'shortInterestPercent' => NumberDotFormatCast::class,
+        'volume' => NumberDotFormatCast::class,
+        'price' => NumberDotFormatCast::class,
     ];
 
     public function overview()
