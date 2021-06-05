@@ -37,11 +37,13 @@ class StockOverviewObserver
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);
 
+        $originalDiff = new StockOverview($originalDiff);
+
         // if original data and current data is different - creating history row and notifications
-        if (array_diff($originalDiff, $diff->toArray()))
+        if ($originalDiff->toJson() !== $diff->toJson())
         {
             $history = $stockOverview->history()->create(
-                $originalDiff
+                $originalDiff->toArray()
             );
             event( new HistoryUpdateEvent(StockOverview::class, $stockOverview->stock_id, $history->id));
 

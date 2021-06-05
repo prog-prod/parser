@@ -14,8 +14,6 @@ use App\Models\StockCorporateAction;
 
 class StockCompanyProfileObserver
 {
-
-
     /**
      * Handle the Stock "created" event.
      *
@@ -33,12 +31,13 @@ class StockCompanyProfileObserver
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);
 
+        $originalDiff = new StockCompanyProfile($originalDiff);
+
         // if original data and current data is different - creating history row
-        if (array_diff($originalDiff, $diff->toArray())) {
+        if ($originalDiff->toJson() !== $diff->toJson()) {
             // add current stock data to history
-            $data = $stock->makeHidden('id', 'created_at', 'updated_at')->getRawOriginal();
-            $data['stocks_history_id'] = $stock->history()->stock->id;
-            $history = $stock->history()->create($data);
+            $originalDiff->stocks_history_id = $stock->stock_id;
+            $history = $stock->history()->create($originalDiff->toArray());
 
             event( new HistoryUpdateEvent(StockCompanyProfile::class, $stock->stock_id, $history->id));
         }

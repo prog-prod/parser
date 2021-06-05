@@ -3,12 +3,17 @@
 namespace App\Jobs\Parser;
 
 use App\Models\Stock;
+use App\Models\User;
+use App\Notifications\ErrorParseNotification;
+use App\Notifications\StockUpdated;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
+use NotificationChannels\Telegram\TelegramMessage;
 
 class StockCorporateParseJob implements ShouldQueue
 {
@@ -46,7 +51,13 @@ class StockCorporateParseJob implements ShouldQueue
         {
             foreach ($response['records'] as $record)
             {
-                $this->stock->corporateActions()->updateOrCreate(['changeDate' => $record['changeDate']], $record);
+                try {
+                    $this->stock->corporateActions()->updateOrCreate(['changeDate' => $record['changeDate']], $record);
+                }
+                catch (\Exception $e) {
+                    $message = "**ERROR Parse (StockCorporateParseJob) | Symbol: " . $this->stock->symbol;
+                    Notification::send([User::first()], new ErrorParseNotification($message, $e->getMessage()));
+                }
             }
         }
 

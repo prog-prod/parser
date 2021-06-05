@@ -26,12 +26,13 @@ class StockCorporateActionObserver
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);
 
-        // if original data and current data is different - creating history row
+        $originalDiff = new StockCorporateAction($originalDiff);
 
-        if (array_diff($originalDiff, $diff->toArray())) {
+        // if original data and current data is different - creating history row
+        if ($originalDiff->toJson() !== $diff->toJson()) {
             // add current stock data to history
             $history = $stock->history()->create(
-                $stock->makeHidden('id', 'created_at', 'updated_at')->getRawOriginal()
+                $originalDiff->toArray()
             );
             event( new HistoryUpdateEvent(StockCorporateAction::class, $stock->stock_id, $history->id));
 

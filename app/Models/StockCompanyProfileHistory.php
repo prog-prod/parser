@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\ArrayCast;
 use App\Traits\BaseTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -100,18 +101,18 @@ class StockCompanyProfileHistory extends Model
 
     protected $casts = [
         'estimatedMarketCap' => 'float',
-        'auditors' => 'array',
-        'indexStatuses' => 'array',
-        'investmentBanks' => 'array',
-        'investorRelationFirms' => 'array',
-        'notes' => 'array',
-        'legalCounsels' => 'array',
-        'officers' => 'array',
-        'otcAward' => 'array',
-        'otherSecurities' => 'array',
-        'premierDirectorList' => 'array',
-        'standardDirectorList' => 'array',
-        'securities' => 'array',
+        'auditors' => ArrayCast::class,
+        'indexStatuses' => ArrayCast::class,
+        'investmentBanks' => ArrayCast::class,
+        'investorRelationFirms' => ArrayCast::class,
+        'notes' => ArrayCast::class,
+        'legalCounsels' => ArrayCast::class,
+        'officers' => ArrayCast::class,
+        'otcAward' => ArrayCast::class,
+        'otherSecurities' => ArrayCast::class,
+        'premierDirectorList' => ArrayCast::class,
+        'standardDirectorList' => ArrayCast::class,
+        'securities' => ArrayCast::class,
     ];
 
     public function stock()

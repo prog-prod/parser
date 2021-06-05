@@ -33,14 +33,15 @@ class StockNewsObserver
         unset($originalDiff['updated_at']);
         unset($originalDiff['created_at']);
 
+        $originalDiff = new StockNews($originalDiff);
+
         // if original data and current data is different - creating history row
-        if (array_diff($originalDiff, $diff->toArray())) {
+        if ($originalDiff->toJson() !== $diff->toJson()) {
             // add current stock data to history
             $history = $stock->history()->create(
-                $stock->makeHidden('id', 'created_at', 'updated_at')->getRawOriginal()
+                $originalDiff->toArray()
             );
             event( new HistoryUpdateEvent(StockNews::class, $stock->stock_id, $history->id));
-
         }
 //        NotifyUsersAboutUpdatedStockJob::dispatchNow($stock);
     }

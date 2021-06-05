@@ -4,6 +4,8 @@ namespace App\Jobs\Parser;
 
 use App\Models\Stock;
 use App\Models\StockCompanyProfile;
+use App\Models\User;
+use App\Notifications\ErrorParseNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,6 +14,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
+use NotificationChannels\Telegram\TelegramMessage;
 
 class StockCompanyProfileParseJob implements ShouldQueue
 {
@@ -55,8 +59,14 @@ class StockCompanyProfileParseJob implements ShouldQueue
                 $response['tierStartDate'] = 0;
             }
 
-            $companyProfile->fill($response);
-            $companyProfile->save();
+            try {
+                $companyProfile->fill($response);
+                $companyProfile->save();
+            }
+            catch (\Exception $e) {
+                $message = "**ERROR Parse (StockCompanyProfileParseJob) | Symbol: " . $this->stock->symbol;
+                Notification::send([User::first()], new ErrorParseNotification($message, $e->getMessage()));
+            }
         }
 
         StockCompanyProfileParseJob::dispatch($this->stock)->delay(now()->addHours(rand(3,7)));
