@@ -17,7 +17,9 @@ class NumberWithoutDotFormatCast implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return number_format($value ?? 0, 0, '', ',');
+        return is_string($value)
+            ? $value
+            : number_format($value ?? 0, 0, '', ',');
     }
 
     /**
