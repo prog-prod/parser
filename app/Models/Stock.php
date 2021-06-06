@@ -149,10 +149,9 @@ class Stock extends Model
             $collection = $stocks->getCollection();
             $collection = $collection->filter(function ($v) use ($data){
 
-                return $data['viewed'] === 'checked'
-                    ? !$v->isViewed()
-                    : $data['viewed'] === 'unchecked'
-                    ? $v->isViewed() : true;
+                if($data['viewed'] === 'checked') return $v->isViewed();
+                elseif($data['viewed'] === 'unchecked') return !$v->isViewed();
+                else return true;
             });
             $stocks->setCollection($collection);
             return $stocks;
