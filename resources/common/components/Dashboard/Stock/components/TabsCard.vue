@@ -17,7 +17,8 @@
                 <QuoteTab/>
                 <CompanyProfileTab/>
                 <SecurityDetailsTab/>
-                <div v-for="tab in ['news', 'financials', 'disclosure', 'research']" class="tab-pane" :id="tab" role="tabpanel">
+                <NewsTab/>
+                <div v-for="tab in ['financials', 'disclosure', 'research']" class="tab-pane" :id="tab" role="tabpanel">
                     <p class="mb-0">
                         Trust fund seitan letterpress, keytar raw denim keffiyeh etsy
                         art party before they sold out master cleanse gluten-free squid
@@ -38,9 +39,10 @@
   import QuoteTab from "./tabs/QuoteTab";
   import OverviewTab from "./tabs/OverviewTab";
   import {mapGetters} from "vuex";
+  import NewsTab from "./tabs/NewsTab";
 
   export default {
-      components: {SecurityDetailsTab, CompanyProfileTab, QuoteTab, OverviewTab},
+      components: {NewsTab, SecurityDetailsTab, CompanyProfileTab, QuoteTab, OverviewTab},
       name: "TabsCard",
       data: () => ({
           tabs: [

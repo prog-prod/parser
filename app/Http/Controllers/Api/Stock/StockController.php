@@ -7,6 +7,7 @@ use App\Events\HistoryUpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StockOverviewResource;
 use App\Http\Resources\StockResource;
+use App\Http\Resources\StockResourceWithNews;
 use App\Http\Resources\StocksHistoryResource;
 use App\Models\HistoryUpdate;
 use App\Models\Stock;
@@ -49,7 +50,7 @@ class StockController extends Controller
     {
         return response()->json([
             'result' => true,
-            'stock' => new StockResource($stock)
+            'stock' => new StockResourceWithNews($stock)
         ], 200);
     }
     /**
