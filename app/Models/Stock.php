@@ -143,6 +143,20 @@ class Stock extends Model
         if (isset($data['symbol'])) {
             $stocks->where('symbol', 'like', '%' . trim($data['symbol']) . '%');
         }
+        if (isset($data['viewed'])) {
+            $stocks = $stocks->paginate($data['per_page'] ?? 20);
+
+            $collection = $stocks->getCollection();
+            $collection = $collection->filter(function ($v) use ($data){
+
+                return $data['viewed'] === 'checked'
+                    ? !$v->isViewed()
+                    : $data['viewed'] === 'unchecked'
+                    ? $v->isViewed() : true;
+            });
+            $stocks->setCollection($collection);
+            return $stocks;
+        }
 
         return $stocks->paginate($data['per_page'] ?? 20);
     }

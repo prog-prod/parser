@@ -7,6 +7,7 @@
                            @filter-market="filterMarket"
                            @filter-country="filterCountry"
                            @filter-symbol="filterSymbol"
+                           @filter-viewed="filterViewed"
         />
         <div slot="content" class="dashboard">
             <div class="card">
@@ -157,6 +158,10 @@ export default {
         },
         filterSymbol(symbol){
             this.$store.commit('SET_FILTER_DATA', { symbol })
+            this.fetchData();
+        },
+        filterViewed(viewed){
+            this.$store.commit('SET_FILTER_DATA', { viewed })
             this.fetchData();
         },
         async fetchData(){
