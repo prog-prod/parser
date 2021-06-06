@@ -16,7 +16,8 @@ export default {
             price_max: null,
             market: null,
             country: null,
-            symbol: null
+            symbol: null,
+            viewed: null
         },
     },
     getters: {
