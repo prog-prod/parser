@@ -27,6 +27,7 @@ export default {
             if(value === null){
                 return true;
             }
+            console.log(column, this.STOCK_UPDATED_COLUMNS, Object.keys(this.STOCK_UPDATED_COLUMNS).includes(column))
 
             if(this.STOCK_UPDATED_COLUMNS && Object.keys(this.STOCK_UPDATED_COLUMNS).includes(column)){
                 if(disableStyles || !this.INITIAL_STOCK_ACTIVE){
